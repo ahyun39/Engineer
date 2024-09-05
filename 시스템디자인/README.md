@@ -24,6 +24,7 @@
 
 ## MSA(Microservice Architecture)
 
-### [Monolithic Architecture vs. Microservice Architecture]()
+### [Monolithic Architecture vs. Microservice Architecture](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/MSA.md)
 ### Agile
 
+reference - https://www.atlassian.com/ko/microservices/microservices-architecture/microservices-vs-monolith
