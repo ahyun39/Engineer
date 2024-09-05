@@ -1,11 +1,10 @@
 # 시스템 디자인
 
-[출처](https://maily.so/devpill/posts/d64fde2f) 의 내용을 그대로 작성하며 공부한 내용입니다.
-
-
 <br>
 
 ## 시스템 디자인 설계
+
+[출처](https://maily.so/devpill/posts/d64fde2f) 의 내용을 그대로 작성하며 공부한 내용입니다.
 
 ### 1. [요구사항 명확화](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/1_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD_%EB%AA%85%ED%99%95%ED%99%94.md)
 
@@ -20,4 +19,11 @@
 ### 6. [핵심 구성 요소에 대해 자세히 살펴보기](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/6_%ED%95%B5%EC%8B%AC_%EA%B5%AC%EC%84%B1_%EC%9A%94%EC%86%8C%EC%97%90_%EB%8C%80%ED%95%B4_%EC%9E%90%EC%84%B8%ED%9E%88_%EC%82%B4%ED%8E%B4%EB%B3%B4%EA%B8%B0.md)
 
 ### 7. [핵심 문제 해결](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/7_%ED%95%B5%EC%8B%AC_%EB%AC%B8%EC%A0%9C_%ED%95%B4%EA%B2%B0.md)
+
+<br>
+
+## MSA(Microservice Architecture)
+
+### [Monolithic Architecture vs. Microservice Architecture]()
+### Agile
 
