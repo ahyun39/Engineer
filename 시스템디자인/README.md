@@ -25,6 +25,15 @@
 ## MSA(Microservice Architecture)
 
 ### [Monolithic Architecture vs. Microservice Architecture](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/MSA.md)
-### Agile
+### [Agile]()
+    - Agile vs. Scrum
 
-reference - https://www.atlassian.com/ko/microservices/microservices-architecture/microservices-vs-monolith
+
+<br>
+
+reference
+- https://maily.so/devpill/posts/d64fde2f
+- https://www.atlassian.com/ko/microservices/microservices-architecture/microservices-vs-monolith
+- https://happycloud-lee.tistory.com/261?category=8322466
+- https://business.adobe.com/kr/blog/basics/agile-vs-waterfall-project-management
+- https://www.codestates.com/blog/content/%EC%95%A0%EC%9E%90%EC%9D%BC-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%9A%A9%EC%96%B4
