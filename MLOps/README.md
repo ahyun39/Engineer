@@ -23,6 +23,10 @@ MLOps는 엔터프라이즈 애플리케이션을 효율적으로 개발, 배포
 
 
 <br>
+
+## CI/CD
+
+<br>
 <br>
 
 reference - https://blogs.nvidia.co.kr/blog/what-is-mlops/
