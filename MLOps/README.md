@@ -26,6 +26,8 @@ MLOps는 엔터프라이즈 애플리케이션을 효율적으로 개발, 배포
 
 ## CI/CD
 
+- [CI/CD 란](https://github.com/ahyun39/ML-Engineer/blob/main/MLOps/CI_CD.md)
+
 <br>
 <br>
 
