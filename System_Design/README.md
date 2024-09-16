@@ -33,6 +33,10 @@
 - [Agile vs. Scrum](https://github.com/ahyun39/ML-Engineer/blob/study/%EC%8B%9C%EC%8A%A4%ED%85%9C%EB%94%94%EC%9E%90%EC%9D%B8/MSA/Agile_vs_Scrum.md)
 
 
+## Database
+
+### [SQL vs. NoSQL]()
+
 <br>
 
 reference
