@@ -35,7 +35,7 @@
 
 ## Database
 
-### [SQL vs. NoSQL]()
+### [SQL vs. NoSQL](https://github.com/ahyun39/ML-Engineer/blob/main/System_Design/Database/SQL_vs_NoSQL.md)
 
 <br>
 

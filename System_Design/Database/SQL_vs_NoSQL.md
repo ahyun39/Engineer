@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/cd273af5-bc3a-496c-9c1a-7d6791aaa7d1)
+<center><img src="https://github.com/user-attachments/assets/cd273af5-bc3a-496c-9c1a-7d6791aaa7d1" width="500" height="600"/></center>
+
 
 <br>
 
@@ -32,7 +33,8 @@ SQL은 구조화 질의 언어 (Structured Query Language)로 관계형 데이�
 
 **1. 관계형 데이터베이스 관리 시스템 (RDBMS)**
 
-![image (1)](https://github.com/user-attachments/assets/dd0c26df-ce5e-4333-9ea5-227ab20e195c)
+<center><img src="https://github.com/user-attachments/assets/dd0c26df-ce5e-4333-9ea5-227ab20e195c" width="300" height="200"/></center>
+
 
     - 데이터를 정의하고 조작하기 위해 구조화된 쿼리 언어 (SQL)를 사용한다.
     - 데이터를 테이블에 저장하고 스키마를 사용하여 데이터 무결성과 테이블 간의 관계를 강제한다.
@@ -41,7 +43,7 @@ SQL은 구조화 질의 언어 (Structured Query Language)로 관계형 데이�
 
 **2. OLAP (Online Analytical Processing)**
 
-![image](https://github.com/user-attachments/assets/6071eea4-affc-403b-9bad-0e796f2fdfc3)
+<center><img src="https://github.com/user-attachments/assets/6071eea4-affc-403b-9bad-0e796f2fdfc3" width="300" height="200"/></center>
 
     - 복잡한 쿼리를 지원하도록 설계되었으며 데이터 분석과 비즈니스 인텔리전스에 사용된다.
     - 대량의 데이터를 처리할 수 있으며 분석 쿼리에 대해 빠른 응답 시간을 제공한다.
@@ -92,7 +94,7 @@ NoSQL 데이터베이스는 비구조화, 반구조화, 구조화된 데이터�
 
 **1. 키-값 저장소 (Key-Value Store)**
 
-![image (2)](https://github.com/user-attachments/assets/ae8d82c7-274f-4905-b97e-38c563527b9c)
+<center><img src="https://github.com/user-attachments/assets/ae8d82c7-274f-4905-b97e-38c563527b9c" width="300" height="200"/></center>
 
     - 키-값 저장소는 간단한 키-값 방식을 사용하여 데이터를 저장하는 NoSQL 데이터베이스 유형이다.
     - 각 데이터 항목은 키와 관련 값으로 저장되며, 사전이나 해시 테이블과 유사하다.
@@ -102,7 +104,7 @@ NoSQL 데이터베이스는 비구조화, 반구조화, 구조화된 데이터�
 
 **2. 문서 저장소 (Document Store)**
 
-![image (3)](https://github.com/user-attachments/assets/688d0188-7b39-4a49-990f-61757946019a)
+<center><img src="https://github.com/user-attachments/assets/688d0188-7b39-4a49-990f-61757946019a" width="300" height="200"/></center>
 
     - 문서 저장소는 문서 지향 정보를 저장, 검색 및 관리하도록 설계된 또 다른 유형의 NoSQL 데이터베이스이다.
     - 문서는 일반적으로 JSON, BSON 또는 XML 과 같은 형식으로 저장되어 컬렉션 내에서 문서마다 다를 수 있는 유연한 스키마를 허용한다.
@@ -111,7 +113,7 @@ NoSQL 데이터베이스는 비구조화, 반구조화, 구조화된 데이터�
 
 **3. 그래프 데이터베이스**
 
-![image (4)](https://github.com/user-attachments/assets/13896cd4-2df4-47ef-a967-ef3e95fed70d)
+<center><img src="https://github.com/user-attachments/assets/13896cd4-2df4-47ef-a967-ef3e95fed70d" width="300" height="200"/></center>
 
     - 그래프 데이터베이스는 노드, 엣지, 속성을 사용하여 데이터를 표현하고 저장하는 의미론적 쿼리를 위해 그래프 구조를 사용한다.
     - 그래프 데이터베이스는 특히 엔터티 간의 관계를 탐색하는 데 적합하다.
@@ -120,7 +122,7 @@ NoSQL 데이터베이스는 비구조화, 반구조화, 구조화된 데이터�
 
 **4. 칼럼 저장소**
 
-![image (5)](https://github.com/user-attachments/assets/02e163fb-3685-4830-bb57-e9f0187d0a02)
+<center><img src="https://github.com/user-attachments/assets/02e163fb-3685-4830-bb57-e9f0187d0a02" width="300" height="200"/></center>
 
     - 칼럼 저장소(or 칼럼 패밀리 저장소)는 행이 아닌 열별로 데이터를 저장하는 NoSQL 데이터베이스 유형이다.
     - 큰 데이터셋에 대한 집계와 요약이 일반적인 분석적 쿼리 워크로드에 특히 유리하다.
