@@ -69,12 +69,12 @@ def coffee_view(request):
     <img width="230" alt="Untitled" src="https://github.com/user-attachments/assets/41526736-39c9-442b-9b03-7da503b0e811">
   </div>
 
+
   <div style="flex: 1; padding-left: 10px;">
-
-    1. 왜 form의 순서가 바껴서 나올까.
-    2. 저장하는 버튼은 생성되지 않았다.
-
+      1. 왜 form의 순서가 바껴서 나올까. <br>
+      2. 저장하는 버튼은 생성되지 않았다.
   </div>
+
 </div>
 
 <br>
@@ -150,11 +150,9 @@ def coffee_view(request):
   </div>
 
   <div style="flex: 1; padding-left: 10px;">
-
     1. form에 입력된 결과가 출력까지 잘 되는 것을 확인할 수 있다.
-
   </div>
-  
+
 </div>
 
 
