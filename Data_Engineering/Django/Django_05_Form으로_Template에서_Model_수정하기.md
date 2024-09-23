@@ -63,20 +63,24 @@ def coffee_view(request):
 </html>
 ```
 
-<div style="display: flex;">
+<div style="display: flex; justify-content: space-between;">
 
-  <div style="flex: 1; padding-right: 10px;">
-    <img width="230" alt="Untitled" src="https://github.com/user-attachments/assets/41526736-39c9-442b-9b03-7da503b0e811">
-  </div>
+<div style="width: 48%;">
 
-
-  <div style="flex: 1; padding-left: 10px;">
-      1. 왜 form의 순서가 바껴서 나올까. <br>
-      2. 저장하는 버튼은 생성되지 않았다.
-  </div>
+<img width="230" alt="Untitled" src="https://github.com/user-attachments/assets/41526736-39c9-442b-9b03-7da503b0e811">
 
 </div>
 
+<div style="width: 48%;">
+
+1. 왜 form의 순서가 바껴서 나올까. <br>
+2. 저장하는 버튼은 생성되지 않았다.
+
+</div>
+
+</div>
+
+<br>
 <br>
 
 > **만들어진 form에 Button을 추가한다.**
@@ -143,17 +147,18 @@ def coffee_view(request):
     return render(request, 'coffee.html', {"coffee_list" : coffee_all, "coffee_form":form})
 ```
 
-<div style="display: flex;">
+<div style="display: flex; justify-content: space-between;">
 
-  <div style="flex: 1; padding-right: 10px;">
-    <img width="276" alt="Untitled (4)" src="https://github.com/user-attachments/assets/ac7de1d8-38ae-4814-9b42-6206c262d5a7">
-  </div>
+<div style="width: 48%;">
 
-  <div style="flex: 1; padding-left: 10px;">
-    1. form에 입력된 결과가 출력까지 잘 되는 것을 확인할 수 있다.
-  </div>
+<img width="276" alt="Untitled (4)" src="https://github.com/user-attachments/assets/ac7de1d8-38ae-4814-9b42-6206c262d5a7">
 
 </div>
 
+<div style="width: 48%;">
 
+1. form에 입력된 결과가 출력까지 잘 되는 것을 확인할 수 있다.
 
+</div>
+
+</div>
