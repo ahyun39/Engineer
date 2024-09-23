@@ -4,14 +4,16 @@ MLOps는 엔터프라이즈 애플리케이션을 효율적으로 개발, 배포
 
 <br>
 
-![mlops1](https://github.com/user-attachments/assets/e2c187cc-8eb9-401f-91b8-7269bb2ffdb5)
+<p align="center"><img width="400" height="200" alt="Untitled (3)" src="https://github.com/user-attachments/assets/e2c187cc-8eb9-401f-91b8-7269bb2ffdb5"></p>
+
 
 <br>
 <br>
 
 ## Machine Learning Pipeline
 
-![mlops2](https://github.com/user-attachments/assets/62e1769e-04dc-49b3-b036-f26be9c25718)
+<p align="center"><img width="420" height="250" alt="Untitled (3)" src="https://github.com/user-attachments/assets/62e1769e-04dc-49b3-b036-f26be9c25718"></p>
+
 
 - [ML Pipeline](https://github.com/ahyun39/ML-Engineer/blob/main/MLOps/Machine_Learning_Pipeline.md)
 
@@ -19,7 +21,7 @@ MLOps는 엔터프라이즈 애플리케이션을 효율적으로 개발, 배포
 
 ## Machine Learning Development Lifecycle
 
-![mlops3](https://github.com/user-attachments/assets/6415e29d-3b84-4796-a4e5-b2dbd2dc57b3)
+<p align="center"><img width="420" height="300" alt="Untitled (3)" src="https://github.com/user-attachments/assets/6415e29d-3b84-4796-a4e5-b2dbd2dc57b3"></p>
 
 
 <br>
