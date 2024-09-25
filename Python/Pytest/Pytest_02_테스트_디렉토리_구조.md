@@ -7,12 +7,12 @@
 
 ```python
 project/
-		src/
-				__init__.py
-				calculator.py
-		tests/
-				__init__.py
-				test_calculator.py
+	src/
+			__init__.py
+			calculator.py
+	tests/
+			__init__.py
+			test_calculator.py
 ```
 
 - python 디렉토리 안에 `__init__.py` 파일이 없을 경우, ModuleNotFoundError 에러가 발생할 수 있다.
