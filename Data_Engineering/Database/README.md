@@ -7,3 +7,7 @@
 ### Database를 왜 사용할까?
 
 ### Database System
+
+### Data Modeling
+
+### Normalization
