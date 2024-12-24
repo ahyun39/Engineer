@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stamp Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px; /* save 버튼과 리뷰 사이에 추가적인 여백을 주기 위해 */
+            align-content:center;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Stamp</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="artist_name">Artist Name:</label>
+        {{ form.artist_name.as_p }}
+        <label for="concert_name">Concert Name:</label>
+        {{ form.concert_name.as_p }}
+        <label for="date">Date:</label>
+        {{ form.date.as_p }}
+        <label for="location">Location:</label>
+        {{ form.location.as_p }}
+        <label for="review">Review:</label>
+        {{ form.review.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

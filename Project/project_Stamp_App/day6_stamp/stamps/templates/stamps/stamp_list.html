@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stamp Collection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        li {
+            width: calc(33.333% - 20px); /* 한 줄에 3개씩 배치하기 위해 각 항목의 너비를 33.333%로 설정하고, 좌우 마진을 고려하여 20px을 빼줍니다. */
+            margin: 10px;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .stamp-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stamp-img {
+            width: 100%;
+            height: auto;
+            object-fit: contain; /* 이미지를 컨테이너 내부에 맞추기 */
+        }
+        .add-stamp-img {
+            width: 35px;
+            height: 30px;
+        }
+        .stamp-info {
+            margin-top: 10px;
+        }
+        .stamp-info p {
+            margin: 0;
+        }
+        .add-new-button-container {
+            position: fixed;
+            top: 30px;
+            right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stamp Collection</h1>
+    <div class="add-new-button-container">
+        <a href="{% url 'stamp_create' %}"><img class="add-stamp-img" src="https://seeklogo.com/images/D/day6-logo-19C02D5750-seeklogo.com.png"/></a>
+    </div>
+    <ul>
+        {% for stamp in stamps %}
+            <li class="stamp-container">
+                <img alt="{{ stamp.artist_name }}" class="stamp-img" src="https://tkfile.yes24.com/upload2/PerfBlog/202411/20241119/20241119-51582.jpg"/>
+                <div class="stamp-info">
+                    <p><strong>Date:</strong> {{ stamp.date }}</p>
+                    <p><strong>Concert Name:</strong> {{ stamp.concert_name }}</p>
+                    <p><strong>Artist Name:</strong> {{ stamp.artist_name }}</p>
+                </div>
+                <a href="{% url 'stamp_update' stamp.pk %}">Edit</a>
+                <a href="{% url 'stamp_delete' stamp.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
