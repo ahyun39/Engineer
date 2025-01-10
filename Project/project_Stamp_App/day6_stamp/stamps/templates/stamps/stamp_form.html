@@ -50,16 +50,7 @@
     <h1>Add Stamp</h1>
     <form method="post">
         {% csrf_token %}
-        <label for="artist_name">Artist Name:</label>
-        {{ form.artist_name.as_p }}
-        <label for="concert_name">Concert Name:</label>
-        {{ form.concert_name.as_p }}
-        <label for="date">Date:</label>
-        {{ form.date.as_p }}
-        <label for="location">Location:</label>
-        {{ form.location.as_p }}
-        <label for="review">Review:</label>
-        {{ form.review.as_p }}
+        {{ form.as_p }}
         <button type="submit">Save</button>
     </form>
 </body>

@@ -38,8 +38,8 @@
             align-items: center;
         }
         .stamp-img {
-            width: 100%;
-            height: auto;
+            width: 40%; /*100%*/
+            height: 60%; /*auto*/
             object-fit: contain; /* 이미지를 컨테이너 내부에 맞추기 */
         }
         .add-stamp-img {
@@ -48,14 +48,29 @@
         }
         .stamp-info {
             margin-top: 10px;
+            margin-bottom: 10px;
         }
         .stamp-info p {
-            margin: 0;
+            margin: 5px;
         }
         .add-new-button-container {
             position: fixed;
             top: 30px;
             right: 50px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px; /* 버튼 간격 조절 */
+        }
+        .btn {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -69,12 +84,14 @@
             <li class="stamp-container">
                 <img alt="{{ stamp.artist_name }}" class="stamp-img" src="https://tkfile.yes24.com/upload2/PerfBlog/202411/20241119/20241119-51582.jpg"/>
                 <div class="stamp-info">
-                    <p><strong>Date:</strong> {{ stamp.date }}</p>
-                    <p><strong>Concert Name:</strong> {{ stamp.concert_name }}</p>
-                    <p><strong>Artist Name:</strong> {{ stamp.artist_name }}</p>
+                    <p><strong>[Date]ㅤㅤ</strong> {{ stamp.date }}</p>
+                    <p><strong>[Concert]</strong> {{ stamp.concert_name }}</p>
+                    <p><strong>[Artist]ㅤ</strong> {{ stamp.artist_name }}</p>
                 </div>
-                <a href="{% url 'stamp_update' stamp.pk %}">Edit</a>
-                <a href="{% url 'stamp_delete' stamp.pk %}">Delete</a>
+                <div class="action-buttons">
+                    <a class="btn" href="{% url 'stamp_update' stamp.pk %}">Edit</a>
+                    <a class="btn" href="{% url 'stamp_delete' stamp.pk %}">Delete</a>
+                </div>
             </li>
         {% endfor %}
     </ul>
