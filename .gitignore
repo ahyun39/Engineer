@@ -1,2 +1,3 @@
 # .gitignore
 .env
+ML/RAG/llm-application/chroma/
