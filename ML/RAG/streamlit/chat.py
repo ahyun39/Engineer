@@ -1,13 +1,7 @@
+from llm import get_ai_message
 import streamlit as st
 
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains import RetrievalQA
-from langchain import hub
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings
-from langchain_pinecone import PineconeVectorStore
 
 st.set_page_config(page_title="소득세 챗봇", page_icon="👾")
 st.title("👾 소득세 챗봇")
@@ -23,39 +17,6 @@ for message in st.session_state.message_list:
     with st.chat_message(message["role"]):
         st.write(message['content'])
 
-# 사용자의 질문을 받아서 AI의 답변을 생성하는 함수
-def get_ai_message(user_message):
-
-    # OpenAI에서 제공하는 Embedding Model을 활용해서 `chunk`를 vector화
-    embedding = OpenAIEmbeddings(model="text-embedding-3-large")
-    index_name='tax-markdown-index'
-    database = PineconeVectorStore.from_existing_index(index_name=index_name, embedding=embedding)
-
-    llm = ChatOpenAI(model='gpt-4o')
-    prompt = hub.pull("rlm/rag-prompt")
-    retriever = database.as_retriever(search_kwargs={"k":4})
-
-    qa_chain = RetrievalQA.from_chain_type(
-        llm, 
-        retriever=retriever,
-        chain_type_kwargs={"prompt": prompt}
-    )
-
-    dictionary = ["사람을 나타내는 표현 -> 거주자"]
-
-    prompt = ChatPromptTemplate.from_template("""
-        사용자의 질문을 보고, 우리의 사전을 참고해서 사용자의 질문을 변경해주세요.
-        만약 변경할 필요가 없다고 판단된다면, 사용자의 질문을 변경하지 않아도 됩니다.
-        그런 경우 질문만 리턴해주세요.
-        사전: {dictionary}
-                                            
-        질문: {question}
-    """)
-
-    dictionary_chain = prompt | llm | StrOutputParser()
-    tax_chain = {"query":dictionary_chain} | qa_chain
-    ai_message = tax_chain.invoke({"question":user_message, "dictionary": "\n".join(dictionary)})
-    return ai_message['result']
 
 # 채팅 input은 사용자의 질문
 if user_question := st.chat_input(placeholder="소득세에 관련된 궁금한 내용들을 말씀해주세요!"):
