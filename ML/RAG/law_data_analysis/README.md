@@ -60,7 +60,9 @@
 * **텍스트 길이 분포 분석**
 
   * 각 문단(s3 단위)의 글자 수 분포
-    ![alt text](images/contents_length_dist.png)
+  
+    <img src="images/contents_length_dist.png" width="400" height="300">
+
     - describe 
         ``` bash
                   chunk_len
@@ -80,7 +82,8 @@
 
   * 한 문서(doc\_id) 당 chunk 개수 분포 시각화
     * chunk 기준(500자)
-        <img src="images/chunk_cnt_500_dist.png" width="700px" height="300px">
+
+        <img src="images/chunk_cnt_500_dist.png" width="400" height="300">
         
         - describe
             ``` bash
@@ -95,7 +98,9 @@
             max     129.000000
             ```
     * chunk 기준(300자)
-        <img src="images/chunk_cnt_300_dist.png" width="700px" height="300px">
+
+        <img src="images/chunk_cnt_300_dist.png" width="400" height="300">
+        
         - describe
             ``` bash
                         counts
