@@ -1,4 +1,4 @@
-# 📊 비정형 텍스트 데이터 구조화
+# 📊 [Law Data] 비정형 텍스트 데이터 구조화
 
 ## 1. 프로젝트 개요
 
@@ -174,7 +174,7 @@
 
 ---
 
-## 8. 프로젝트 결과
+## 8. 프로젝트 결과 🗂️
 
-* 📄 **데이터 청킹 결과 PDF**
-* 💻 **[Github Repository]()**
+* **[데이터 청킹 결과 PDF](https://github.com/ahyun39/Engineer/blob/main/ML/RAG/law_data_analysis/data_chunking_result.pdf)**
+* **[Github Repository](https://github.com/ahyun39/Engineer/blob/main/ML/RAG/law_data_analysis/data_chunking_logic.py)**
