@@ -80,7 +80,8 @@
 
   * 한 문서(doc\_id) 당 chunk 개수 분포 시각화
     * chunk 기준(500자)
-        ![alt text](images/chunk_cnt_500_dist.png)
+        <img src="images/chunk_cnt_500_dist.png" width="700px" height="300px">
+        
         - describe
             ``` bash
                         counts
@@ -94,7 +95,7 @@
             max     129.000000
             ```
     * chunk 기준(300자)
-        ![alt text](images/chunk_cnt_300_dist.png)
+        <img src="images/chunk_cnt_300_dist.png" width="700px" height="300px">
         - describe
             ``` bash
                         counts
@@ -144,8 +145,8 @@
 
 * chunking 전 전체 데이터 분포 확인
     - 소제목을 기준으로 내용을 묶었을 때, 내용의 길이 분포 그래프
+    <img src="images/before_chunking_dist.png" width="400" height="300">
 
-    ![alt text](images/before_chunking_dist.png)
     - describe
     
         ``` bash
@@ -162,10 +163,10 @@
 
 * Chunking 후 결과물 검증 (예시 청크 결과 첨부)
     - `law_chunks_v4`: 800자 기준으로 cut / `law_chunks_v3`: 700자 기준으로 cut
-    ![alt text](images/law_chunks_version.png)
+    <img src="images/law_chunks_version.png" width="400" height="250">
 
     - 700자 기준 chunking 후 cnt 분포 그래프
-    ![alt text](images/chunk_cnt_700_dist.png)
+    <img src="images/chunk_cnt_700_dist.png" width="400" height="250">
 
 * 결과적으로 **의미 있는 최소 단위 문서(Chunk)** 생성 → 검색, QA, 추천 등 다양한 분석 파이프라인에 활용 가능
 
