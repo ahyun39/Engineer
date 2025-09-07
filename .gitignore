@@ -1,3 +1,13 @@
 # .gitignore
 .env
 ML/RAG/llm-application/chroma/
+
+# 가상환경 폴더 무시
+spotify-curator-venv/
+.venv/
+
+# 파이썬 캐시 파일 무시
+__pycache__/
+
+# Spotipy 인증 토큰 캐시 무시
+.cache
