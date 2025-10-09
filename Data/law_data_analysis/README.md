@@ -182,5 +182,5 @@
 
 ## 8. 프로젝트 결과 🗂️
 
-* **[데이터 청킹 결과 PDF](https://github.com/ahyun39/Engineer/blob/main/ML/RAG/law_data_analysis/data_chunking_result.pdf)**
-* **[Github Repository](https://github.com/ahyun39/Engineer/blob/main/ML/RAG/law_data_analysis/data_chunking_logic.py)**
+* **[데이터 청킹 결과 PDF](https://github.com/ahyun39/Engineer/blob/main/Data/law_data_analysis/data_chunking_result.pdf)**
+* **[Github Repository](https://github.com/ahyun39/Engineer/blob/main/Data/law_data_analysis/data_chunking_logic.py)**
