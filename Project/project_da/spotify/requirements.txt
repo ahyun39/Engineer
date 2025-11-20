@@ -1,8 +1,0 @@
-spotipy>=2.22.0
-pandas
-numpy
-scikit-learn
-matplotlib
-python-dotenv
-tqdm
-streamlit
