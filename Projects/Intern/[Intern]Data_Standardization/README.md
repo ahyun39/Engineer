@@ -45,6 +45,58 @@
 - 컬럼명 필터링 → 코멘트 분석 → 표준화 여부 판별까지  
   **일괄 자동 처리 파이프라인 설계**
 
+```python
+# Kiwi 활용 예시)
+
+# 1. kiwi로 형태소 분리하기
+from kiwipiepy import Kiwi, Match
+kiwi = Kiwi()
+
+# 예를 들어, type에 대한 comment를 분석한다고 하자.
+inputs = ['type'에 대한 모든 comment]
+
+inputs = ['생성일시', '수정일시', '종료일자', '가입일자', '계약일자']
+
+tokens = []
+
+for word in inputs:
+    tokenization = kiwi.tokenize(word, normalize_coda=True)
+    for i in range(len(tokenization)):
+        tokens.append(tokenization[i][0])
+print(tokens)
+
+# 출력 결과 예시: ['생성', '일시', '수정', '일시', '종료일', '자', '가입', '일자', '계약', '일자']
+
+# 2. 단어별 분리된 형태소 비율 계산
+
+import pandas as pd
+
+# 예시 데이터프레임
+# dict_df: 영문 단어와 한글 단어, 그에 대한 comment_cnt
+dict_df = pd.DataFrame({
+    'en_word': ['receipt', 'receipt', 'receipt', 'receipt'],
+    'ko_word': ['영수증', '받기', '수령액', '영수증'],
+    'comment_cnt': [2, 0, 0, 1]
+})
+
+# comment_df: 다른 데이터프레임 (예시로 동일한 데이터 사용)
+comment_df = pd.DataFrame({
+    'en_word': ['receipt', 'receipt', 'receipt', 'receipt'],
+    'ko_word': ['영수증', '받기', '수령액', '영수증'],
+    'comment_cnt': [3, 0, 0, 1]
+})
+
+# 1) 두 데이터프레임을 합침
+merged_df = pd.concat([dict_df, comment_df])
+
+# 2) 'en_word'와 'ko_word'로 groupby하고 'comment_cnt'의 합을 구함
+grouped_df = merged_df.groupby(['en_word', 'ko_word'], as_index=False)['comment_cnt'].sum()
+
+# 3) 결과 출력
+print(grouped_df)
+
+```
+
 ---
 
 ### 3.3. 협업 방식 및 문서화 체계 개선
