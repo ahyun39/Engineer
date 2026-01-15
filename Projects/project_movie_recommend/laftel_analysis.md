@@ -73,7 +73,7 @@
         (메이저 작품을 소비하는 사람들이 많을수록 원작(자막)으로 정주행을 하는 경우가 많으므로, 메이저 작품에 대한 콘텐츠 희소성은 유저 유입에 더 크게 작용할 것이라고 생각)
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/2fe2351b-952d-4df8-96d4-0c00555c1979" width=200 height=150></p>
+<img src="https://github.com/user-attachments/assets/2fe2351b-952d-4df8-96d4-0c00555c1979" width=600 height=400></p>
 
 - **인사이트**:
     - `평점 우위`: 타깃 작품군의 평균 평점은 약 8.8~9.1점으로 시장 전체 평균(6.5점)보다 월등히 높음. 유저는 단순히 애니메이션을 소비하는 것뿐만 아니라 실패없는 명작을 보기 위해 라프텔을 선택.
