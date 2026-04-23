@@ -4,6 +4,8 @@
 # 대용량 데이터 파일
 Projects/project_Recommendation/data/store_data.csv
 ML/RAG/llm-application/chroma/
+Projects/project_marketing_analysis/sales_conversion.csv
+Projects/project_marketing_analysis/portfolio_supercent_guide.ipynb
 
 # 가상환경 폴더 무시
 spotify-curator-venv/
