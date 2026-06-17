@@ -1,0 +1,118 @@
+"""사람인 채용 공고 Load 모듈.
+
+ETL 파이프라인의 Load 단계: transformer.py가 만든 가공 데이터를
+Elasticsearch 인덱스에 bulk 적재한다.
+job_id를 ES _id로 사용하므로 같은 공고를 재적재해도 중복되지 않는다.
+"""
+
+import math
+
+import pandas as pd
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
+
+ES_HOST = "http://localhost:9200"
+INDEX_NAME = "saramin-jobs"
+
+# career(원본), registered_at(원본), job_meta_count, error_msg 제외
+LOAD_COLUMNS = [
+    "job_id",
+    "company_nm", "job_tit", "job_meta",
+    "work_place", "city", "district",
+    "career_level", "employment_type", "education",
+    "salary", "salary_amount",
+    "deadline", "deadline_date", "is_closed",
+    "registered_at_dt", "crawl_time",
+    "job_url", "source", "status",
+]
+
+MAPPING = {
+    "mappings": {
+        "properties": {
+            "company_nm":      {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
+            "job_tit":         {"type": "text"},
+            "job_meta":        {"type": "keyword"},
+            "work_place":      {"type": "keyword"},
+            "city":            {"type": "keyword"},
+            "district":        {"type": "keyword"},
+            "career_level":    {"type": "keyword"},
+            "employment_type": {"type": "keyword"},
+            "education":       {"type": "keyword"},
+            "salary":          {"type": "keyword"},
+            "salary_amount":   {"type": "integer"},
+            "deadline":        {"type": "keyword"},
+            "deadline_date":   {"type": "date"},
+            "is_closed":       {"type": "boolean"},
+            "registered_at_dt": {"type": "date"},
+            "crawl_time":      {"type": "date"},
+            "job_url":         {"type": "keyword"},
+            "source":          {"type": "keyword"},
+            "status":          {"type": "keyword"},
+        }
+    }
+}
+
+
+def _get_client():
+    return Elasticsearch(ES_HOST)
+
+
+def _create_index_if_not_exists(es: Elasticsearch):
+    if not es.indices.exists(index=INDEX_NAME):
+        es.indices.create(index=INDEX_NAME, mappings=MAPPING["mappings"])
+        print(f"인덱스 생성: {INDEX_NAME}")
+
+
+def _clean(v):
+    """None/NaN 을 None으로 통일, 빈 리스트 제거"""
+    if isinstance(v, list):
+        return v if v else None
+    if v is None:
+        return None
+    try:
+        if isinstance(v, float) and math.isnan(v):
+            return None
+    except (TypeError, ValueError):
+        pass
+    return v
+
+
+def _to_actions(df: pd.DataFrame):
+    for record in df[LOAD_COLUMNS].to_dict(orient="records"):
+        doc = {k: _clean(v) for k, v in record.items()}
+        doc = {k: v for k, v in doc.items() if v is not None}
+
+        job_id = doc.pop("job_id", None)
+        if not job_id:
+            continue
+
+        yield {
+            "_index": INDEX_NAME,
+            "_id": job_id,
+            "_source": doc,
+        }
+
+
+def load(df: pd.DataFrame):
+    es = _get_client()
+    _create_index_if_not_exists(es)
+
+    success, errors = bulk(es, _to_actions(df), raise_on_error=False)
+
+    if errors:
+        print(f"ES 적재 실패 {len(errors)}건: {errors[:3]}")
+    print(f"ES 적재 완료: {success}건 → index={INDEX_NAME}")
+
+    return success, errors
+
+
+if __name__ == "__main__":
+    import json
+    import glob
+
+    latest = sorted(glob.glob("data/processed/*.jsonl"))[-1]
+    print(f"적재 파일: {latest}")
+
+    records = [json.loads(line) for line in open(latest, encoding="utf-8")]
+    df = pd.DataFrame(records)
+    load(df)
