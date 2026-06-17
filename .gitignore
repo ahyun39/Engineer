@@ -1,11 +1,19 @@
 # .gitignore
 .env
+.DS_Store
+**/.DS_Store
 
 # 대용량 데이터 파일
 Projects/project_Recommendation/data/store_data.csv
 ML/RAG/llm-application/chroma/
-Projects/project_marketing_analysis/sales_conversion.csv
-Projects/project_marketing_analysis/portfolio_supercent_guide.ipynb
+Projects/project_marketing_analysis
+Projects/project_finance/data
+Projects/project_finance/index
+Projects/project_finance/notebook
+
+# ETL 파이프라인 수집 데이터·로그 (대용량, 재생성 가능)
+Projects/project_recruit_etl/data/
+Projects/project_recruit_etl/logs/
 
 # 가상환경 폴더 무시
 spotify-curator-venv/
