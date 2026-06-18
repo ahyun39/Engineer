@@ -10,6 +10,9 @@ from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 
 from scraper import scrape, save_raw
+from log_config import get_logger
+
+logger = get_logger(__name__)
 
 KAFKA_BOOTSTRAP = "localhost:9092"
 TOPIC = "saramin-jobs-raw"
@@ -33,7 +36,7 @@ def create_producer():
 
 
 def produce():
-    print(f"=== Kafka Producer 시작: topic={TOPIC} ===")
+    logger.info("=== Kafka Producer 시작: topic=%s ===", TOPIC)
 
     df = scrape()
     save_raw(df)
@@ -48,7 +51,7 @@ def produce():
     producer.flush()
     producer.close()
 
-    print(f"Kafka 발행 완료: {sent}건 → topic={TOPIC}")
+    logger.info("Kafka 발행 완료: %d건 → topic=%s", sent, TOPIC)
 
 
 if __name__ == "__main__":

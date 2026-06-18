@@ -13,6 +13,10 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from log_config import get_logger
+
+logger = get_logger(__name__)
+
 BASE_URL = "https://www.saramin.co.kr"
 LIST_URL = f"{BASE_URL}/zf_user/jobs/public/list/"
 
@@ -114,15 +118,15 @@ def scrape(pages=range(1, 11)):
     results = []
 
     for page in pages:
-        print(f"크롤링 중: page={page}")
+        logger.debug("크롤링 중: page=%d", page)
         jobs = fetch_jobs_page(page)
-        print(f"공고 수: {len(jobs)}")
+        logger.debug("공고 수: %d", len(jobs))
 
         for item in jobs:
             try:
                 results.append(parse_job(item))
             except Exception as e:
-                print(f"파싱 실패: {e}")
+                logger.warning("파싱 실패: %s", e)
                 results.append(build_error_record(item, e))
 
     df = pd.DataFrame(results)
@@ -138,15 +142,16 @@ def save_raw(df, out_dir=RAW_DIR):
 
     df.to_json(path, orient="records", lines=True, force_ascii=False)
 
-    print(f"원시 데이터 저장: {path} ({len(df)} rows)")
+    logger.info("원시 데이터 저장: %s (%d rows)", path, len(df))
     return path
 
 
 if __name__ == "__main__":
     df = scrape()
-    print(
-        f"총 수집 건수: {len(df)} "
-        f"(성공: {(df['status'] == 'success').sum()}, "
-        f"실패: {(df['status'] == 'error').sum()})"
+    logger.info(
+        "총 수집 건수: %d (성공: %d, 실패: %d)",
+        len(df),
+        (df["status"] == "success").sum(),
+        (df["status"] == "error").sum(),
     )
     save_raw(df)

@@ -11,6 +11,10 @@ import pandas as pd
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 
+from log_config import get_logger
+
+logger = get_logger(__name__)
+
 ES_HOST = "http://localhost:9200"
 INDEX_NAME = "saramin-jobs"
 
@@ -60,7 +64,7 @@ def _get_client():
 def _create_index_if_not_exists(es: Elasticsearch):
     if not es.indices.exists(index=INDEX_NAME):
         es.indices.create(index=INDEX_NAME, mappings=MAPPING["mappings"])
-        print(f"인덱스 생성: {INDEX_NAME}")
+        logger.info("인덱스 생성: %s", INDEX_NAME)
 
 
 def _clean(v):
@@ -100,8 +104,8 @@ def load(df: pd.DataFrame):
     success, errors = bulk(es, _to_actions(df), raise_on_error=False)
 
     if errors:
-        print(f"ES 적재 실패 {len(errors)}건: {errors[:3]}")
-    print(f"ES 적재 완료: {success}건 → index={INDEX_NAME}")
+        logger.error("ES 적재 실패 %d건: %s", len(errors), errors[:3])
+    logger.info("ES 적재 완료: %d건 → index=%s", success, INDEX_NAME)
 
     return success, errors
 
@@ -111,7 +115,7 @@ if __name__ == "__main__":
     import glob
 
     latest = sorted(glob.glob("data/processed/*.jsonl"))[-1]
-    print(f"적재 파일: {latest}")
+    logger.info("적재 파일: %s", latest)
 
     records = [json.loads(line) for line in open(latest, encoding="utf-8")]
     df = pd.DataFrame(records)

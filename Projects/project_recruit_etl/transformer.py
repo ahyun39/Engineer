@@ -11,6 +11,10 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
+from log_config import get_logger
+
+logger = get_logger(__name__)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
 
@@ -186,19 +190,29 @@ def transform(df):
     return df
 
 
-def log_data_quality(df):
-    print("=== 컬럼별 결측치 개수 ===")
-    print(df.isna().sum())
+def log_data_quality(df: pd.DataFrame) -> None:
+    logger.info("=== 컬럼별 결측치 개수 ===\n%s", df.isna().sum().to_string())
 
-    salary_amount_anomaly = df[
-        (df["salary_amount"] == 0) & (~df["salary"].str.contains("협의|채용시", na=False))
-    ]
+    salary_anomaly_cnt = int(
+        ((df["salary_amount"] == 0) & (~df["salary"].str.contains("협의|채용시", na=False))).sum()
+    )
+    career_null   = int(df["career_level"].isna().sum())
+    emp_null      = int(df["employment_type"].isna().sum())
+    district_null = int(df["district"].isna().sum())
 
-    print("\n=== 이상치 점검 ===")
-    print("salary_amount=0 인데 '협의'류 표현이 아닌 행:", len(salary_amount_anomaly))
-    print("career_level 분리 실패:", df["career_level"].isna().sum())
-    print("employment_type 분리 실패:", df["employment_type"].isna().sum())
-    print("district 분리 실패:", df["district"].isna().sum())
+    # 이상치는 WARNING, 정상(0건)은 INFO
+    (logger.warning if salary_anomaly_cnt > 0 else logger.info)(
+        "salary_amount=0 인데 협의류 표현 아닌 행: %d건", salary_anomaly_cnt
+    )
+    (logger.warning if career_null > 0 else logger.info)(
+        "career_level 분리 실패: %d건", career_null
+    )
+    (logger.warning if emp_null > 0 else logger.info)(
+        "employment_type 분리 실패: %d건", emp_null
+    )
+    (logger.warning if district_null > 0 else logger.info)(
+        "district 분리 실패: %d건", district_null
+    )
 
 
 def save_processed(df, out_dir=PROCESSED_DIR):
@@ -209,7 +223,7 @@ def save_processed(df, out_dir=PROCESSED_DIR):
 
     df.to_json(path, orient="records", lines=True, force_ascii=False, date_format="iso")
 
-    print(f"가공 데이터 저장: {path} ({len(df)} rows)")
+    logger.info("가공 데이터 저장: %s (%d rows)", path, len(df))
     return path
 
 

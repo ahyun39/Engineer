@@ -16,6 +16,9 @@ from kafka.errors import NoBrokersAvailable
 
 from transformer import transform, log_data_quality, save_processed
 from loader import load
+from log_config import get_logger
+
+logger = get_logger(__name__)
 
 KAFKA_BOOTSTRAP = "localhost:9092"
 TOPIC = "saramin-jobs-raw"
@@ -38,13 +41,13 @@ POLL_INTERVAL_MS = 5_000
 
 
 def process_batch(records: list):
-    print(f"\n[{datetime.now().strftime('%H:%M:%S')}] 배치 처리 시작: {len(records)}건")
+    logger.info("배치 처리 시작: %d건", len(records))
     df = pd.DataFrame(records)
     df = transform(df)
     log_data_quality(df)
     save_processed(df)
     load(df)
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] 배치 처리 완료\n")
+    logger.info("배치 처리 완료")
 
 
 def run():
@@ -63,7 +66,7 @@ def run():
             "docker compose up -d 로 Kafka를 먼저 실행해주세요."
         )
 
-    print(f"=== ETL Worker 대기 중 (topic={TOPIC}, group={GROUP_ID}) ===")
+    logger.info("=== ETL Worker 대기 중 (topic=%s, group=%s) ===", TOPIC, GROUP_ID)
 
     batch = []
     last_received_at = None
@@ -80,7 +83,7 @@ def run():
                             continue
                         batch.append(msg.value)
                 last_received_at = datetime.now()
-                print(f"메시지 누적: {len(batch)}건 (offset={msg.offset})")
+                logger.debug("메시지 누적: %d건 (offset=%d)", len(batch), msg.offset)
 
             # 배치가 있고 FLUSH_SECONDS 이상 신규 메시지가 없으면 처리
             if batch and last_received_at:
@@ -91,13 +94,13 @@ def run():
                     last_received_at = None
 
     except KeyboardInterrupt:
-        print("\nETL Worker 종료 신호 수신")
+        logger.info("ETL Worker 종료 신호 수신")
     finally:
         if batch:
-            print(f"종료 전 잔여 배치 처리: {len(batch)}건")
+            logger.info("종료 전 잔여 배치 처리: %d건", len(batch))
             process_batch(batch)
         consumer.close()
-        print("ETL Worker 종료 완료")
+        logger.info("ETL Worker 종료 완료")
 
 
 if __name__ == "__main__":
