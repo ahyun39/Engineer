@@ -13,11 +13,12 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from config import SARAMIN_BASE_URL, SCRAPE_PAGES
 from log_config import get_logger
 
 logger = get_logger(__name__)
 
-BASE_URL = "https://www.saramin.co.kr"
+BASE_URL = SARAMIN_BASE_URL
 LIST_URL = f"{BASE_URL}/zf_user/jobs/public/list/"
 
 HEADERS = {
@@ -114,7 +115,9 @@ def build_error_record(item, error):
     }
 
 
-def scrape(pages=range(1, 11)):
+def scrape(pages=None):
+    if pages is None:
+        pages = range(1, SCRAPE_PAGES + 1)
     results = []
 
     for page in pages:

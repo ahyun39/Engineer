@@ -14,15 +14,12 @@ import pandas as pd
 from kafka import KafkaConsumer
 from kafka.errors import NoBrokersAvailable
 
+from config import KAFKA_BOOTSTRAP, KAFKA_TOPIC, KAFKA_GROUP_ID, FLUSH_SECONDS, POLL_INTERVAL_MS
 from transformer import transform, log_data_quality, save_processed
 from loader import load
 from log_config import get_logger
 
 logger = get_logger(__name__)
-
-KAFKA_BOOTSTRAP = "localhost:9092"
-TOPIC = "saramin-jobs-raw"
-GROUP_ID = "etl-worker"
 
 
 def _deserialize(v):
@@ -33,11 +30,6 @@ def _deserialize(v):
         return json.loads(v.decode("utf-8"))
     except Exception:
         return None
-
-# 마지막 메시지 수신 후 이 시간(초)이 지나면 배치 처리
-FLUSH_SECONDS = 30
-# 폴링 간격 (ms)
-POLL_INTERVAL_MS = 5_000
 
 
 def process_batch(records: list):
@@ -53,9 +45,9 @@ def process_batch(records: list):
 def run():
     try:
         consumer = KafkaConsumer(
-            TOPIC,
+            KAFKA_TOPIC,
             bootstrap_servers=KAFKA_BOOTSTRAP,
-            group_id=GROUP_ID,
+            group_id=KAFKA_GROUP_ID,
             auto_offset_reset="earliest",   # 처음 실행 시 가장 오래된 메시지부터
             enable_auto_commit=True,
             value_deserializer=_deserialize,
@@ -66,7 +58,7 @@ def run():
             "docker compose up -d 로 Kafka를 먼저 실행해주세요."
         )
 
-    logger.info("=== ETL Worker 대기 중 (topic=%s, group=%s) ===", TOPIC, GROUP_ID)
+    logger.info("=== ETL Worker 대기 중 (topic=%s, group=%s) ===", KAFKA_TOPIC, KAFKA_GROUP_ID)
 
     batch = []
     last_received_at = None

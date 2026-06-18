@@ -11,12 +11,10 @@ import pandas as pd
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 
+from config import ES_HOST, ES_INDEX
 from log_config import get_logger
 
 logger = get_logger(__name__)
-
-ES_HOST = "http://localhost:9200"
-INDEX_NAME = "saramin-jobs"
 
 # career(원본), registered_at(원본), job_meta_count, error_msg 제외
 LOAD_COLUMNS = [
@@ -62,9 +60,9 @@ def _get_client():
 
 
 def _create_index_if_not_exists(es: Elasticsearch):
-    if not es.indices.exists(index=INDEX_NAME):
-        es.indices.create(index=INDEX_NAME, mappings=MAPPING["mappings"])
-        logger.info("인덱스 생성: %s", INDEX_NAME)
+    if not es.indices.exists(index=ES_INDEX):
+        es.indices.create(index=ES_INDEX, mappings=MAPPING["mappings"])
+        logger.info("인덱스 생성: %s", ES_INDEX)
 
 
 def _clean(v):
@@ -91,7 +89,7 @@ def _to_actions(df: pd.DataFrame):
             continue
 
         yield {
-            "_index": INDEX_NAME,
+            "_index": ES_INDEX,
             "_id": job_id,
             "_source": doc,
         }
@@ -105,7 +103,7 @@ def load(df: pd.DataFrame):
 
     if errors:
         logger.error("ES 적재 실패 %d건: %s", len(errors), errors[:3])
-    logger.info("ES 적재 완료: %d건 → index=%s", success, INDEX_NAME)
+    logger.info("ES 적재 완료: %d건 → index=%s", success, ES_INDEX)
 
     return success, errors
 
