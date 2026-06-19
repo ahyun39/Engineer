@@ -1,6 +1,6 @@
 """사람인 채용 공고 Kafka Producer.
 
-scraper.py로 수집한 원시 데이터를 Kafka 토픽에 발행한다.
+api_extractor.py로 수집한 원시 데이터를 Kafka 토픽에 발행한다.
 cron에 의해 하루 2회(11:00, 18:00) 실행된다.
 """
 

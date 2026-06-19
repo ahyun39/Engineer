@@ -15,6 +15,13 @@ Projects/project_finance/notebook
 Projects/project_recruit_etl/data/
 Projects/project_recruit_etl/logs/
 
+# 개인 공부 파일
+Projects/project_recruit_etl/study_notes.md
+Projects/project_recruit_etl/portfolio.html
+
+# 사람인 API 기반 extractor (향후 확장용 — 현재 미사용)
+Projects/project_recruit_etl/api_extractor.py
+
 # 가상환경 폴더 무시
 spotify-curator-venv/
 .venv/
