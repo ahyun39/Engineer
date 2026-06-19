@@ -5,15 +5,16 @@ DataFrame으로 만들고, 원시 데이터를 JSON Lines로 저장한다.
 이후 Kafka producer가 이 모듈의 결과를 토픽에 publish한다.
 """
 
+import glob
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from config import SARAMIN_BASE_URL, SCRAPE_PAGES
+from config import SARAMIN_BASE_URL, SCRAPE_PAGES, DATA_RETENTION_DAYS
 from log_config import get_logger
 
 logger = get_logger(__name__)
@@ -144,8 +145,21 @@ def save_raw(df, out_dir=RAW_DIR):
     path = os.path.join(out_dir, f"jobs_raw_{timestamp}.jsonl")
 
     df.to_json(path, orient="records", lines=True, force_ascii=False)
-
     logger.info("원시 데이터 저장: %s (%d rows)", path, len(df))
+
+    cutoff = datetime.now() - timedelta(days=DATA_RETENTION_DAYS)
+    processed_dir = os.path.join(BASE_DIR, "data", "processed")
+    for old_raw in glob.glob(os.path.join(out_dir, "jobs_raw_*.jsonl")):
+        if datetime.fromtimestamp(os.path.getmtime(old_raw)) < cutoff:
+            # raw 파일명에서 YYYYMMDD_HH 추출해 같은 시간대 processed 파일 연동 삭제
+            # jobs_raw_20250612_110000.jsonl → "20250612_11"
+            date_hour = os.path.basename(old_raw).replace("jobs_raw_", "").replace(".jsonl", "")[:11]
+            for old_proc in glob.glob(os.path.join(processed_dir, f"jobs_processed_{date_hour}*.jsonl")):
+                os.remove(old_proc)
+                logger.debug("연동 삭제 (processed): %s", old_proc)
+            os.remove(old_raw)
+            logger.debug("오래된 파일 삭제 (raw): %s", old_raw)
+
     return path
 
 

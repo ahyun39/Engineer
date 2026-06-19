@@ -222,7 +222,6 @@ def save_processed(df, out_dir=PROCESSED_DIR):
     path = os.path.join(out_dir, f"jobs_processed_{timestamp}.jsonl")
 
     df.to_json(path, orient="records", lines=True, force_ascii=False, date_format="iso")
-
     logger.info("가공 데이터 저장: %s (%d rows)", path, len(df))
     return path
 

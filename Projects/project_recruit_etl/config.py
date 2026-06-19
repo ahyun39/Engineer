@@ -16,13 +16,14 @@ KAFKA_TOPIC: str     = os.getenv("KAFKA_TOPIC",     "saramin-jobs-raw")
 KAFKA_GROUP_ID: str  = os.getenv("KAFKA_GROUP_ID",  "etl-worker")
 
 # ETL Worker 튜닝
-FLUSH_SECONDS:    int = int(os.getenv("FLUSH_SECONDS",    "30"))
-POLL_INTERVAL_MS: int = int(os.getenv("POLL_INTERVAL_MS", "5000"))
+FLUSH_SECONDS:        int = int(os.getenv("FLUSH_SECONDS",        "30"))
+POLL_INTERVAL_MS:     int = int(os.getenv("POLL_INTERVAL_MS",     "5000"))
+DATA_RETENTION_DAYS:  int = int(os.getenv("DATA_RETENTION_DAYS",  "7"))
 
 # Elasticsearch
 ES_HOST:  str = os.getenv("ES_HOST",  "http://localhost:9200")
 ES_INDEX: str = os.getenv("ES_INDEX", "saramin-jobs")
 
-# Scraper
+# Scraper (크롤러 — 1회성 검증용, scraper_crawl.py)
 SARAMIN_BASE_URL: str = os.getenv("SARAMIN_BASE_URL", "https://www.saramin.co.kr")
 SCRAPE_PAGES:     int = int(os.getenv("SCRAPE_PAGES", "10"))
