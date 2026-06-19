@@ -48,8 +48,8 @@ def run():
             KAFKA_TOPIC,
             bootstrap_servers=KAFKA_BOOTSTRAP,
             group_id=KAFKA_GROUP_ID,
-            auto_offset_reset="earliest",   # 처음 실행 시 가장 오래된 메시지부터
-            enable_auto_commit=True,
+            auto_offset_reset="earliest",    # 처음 실행 시 가장 오래된 메시지부터
+            enable_auto_commit=False,        # 수동 커밋: process_batch 완료 후에만 커밋
             value_deserializer=_deserialize,
         )
     except NoBrokersAvailable:
@@ -82,6 +82,7 @@ def run():
                 idle_seconds = (datetime.now() - last_received_at).seconds
                 if idle_seconds >= FLUSH_SECONDS:
                     process_batch(batch)
+                    consumer.commit()        # 배치 처리 완료 후 offset 커밋
                     batch = []
                     last_received_at = None
 
@@ -91,6 +92,7 @@ def run():
         if batch:
             logger.info("종료 전 잔여 배치 처리: %d건", len(batch))
             process_batch(batch)
+            consumer.commit()
         consumer.close()
         logger.info("ETL Worker 종료 완료")
 
