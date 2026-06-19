@@ -120,6 +120,32 @@ crontab -e
 
 Elasticsearch 색인 시 `job_id`를 `_id`로 사용해 **재수집 시 중복 없이 upsert** 됩니다.
 
+## 보안 설정 (xpack.security)
+
+Elasticsearch 8.x는 **기본값이 `xpack.security.enabled=true`** 입니다.  
+활성화 상태에서는 모든 API 통신에 HTTPS + Bearer 토큰 인증이 강제되어  
+`http://localhost:9200`으로의 단순 HTTP 접속이 차단됩니다.
+
+이 프로젝트는 **로컬 단일 노드 개발 환경**이므로 `false`로 명시 비활성화했습니다.
+
+```yaml
+# docker-compose.yml
+- xpack.security.enabled=false   # 로컬 개발용
+```
+
+> **운영 환경 전환 시 필요한 작업**
+>
+> 1. `xpack.security.enabled=true` (또는 해당 라인 삭제 — 8.x 기본값이 true)
+> 2. ES 컨테이너 초기 기동 후 `elastic` 계정 비밀번호 설정  
+>    ```bash
+>    docker exec -it recruit-es bin/elasticsearch-reset-password -u elastic
+>    ```
+> 3. `loader.py` 접속 코드에 인증 추가  
+>    ```python
+>    Elasticsearch(ES_HOST, basic_auth=("elastic", "your_password"))
+>    ```
+> 4. `ES_HOST`를 `https://localhost:9200`으로 변경 후 `.env`에 비밀번호 관리
+
 ## 실행 결과
 
 ### Kafka Producer / ETL Worker
