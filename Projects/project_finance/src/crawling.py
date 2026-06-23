@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
 import re
 import time
 
@@ -56,7 +57,7 @@ def get_ovdiv_content(csm_seq, ccf_no, cci_no, cnp_cls_no):
             if current is not None:
                 current["body"].append({"type": "note", "text": text})
 
-        elif "tplv5" in cls:
+        elif any(re.match(r"tplv\d+$", c) for c in cls):
             table = div.find("table")
             if table and current is not None:
                 rows = []
@@ -93,7 +94,8 @@ def crawl_csm_seq(csm_seq, max_ccf=5, max_cci=5, max_cnp=5, delay=0.5):
 
     return results
 
-def save_to_json(data, filepath="ovdiv_data.json"):
+def save_to_json(data, filepath="data/law_data.json"):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"저장 완료: {filepath} (총 {len(data)}건)")
