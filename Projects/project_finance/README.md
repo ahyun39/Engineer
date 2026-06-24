@@ -10,7 +10,7 @@
 
 ### 메인 페이지
 
-<p align="center"><img width="480" height="150" alt="Untitled (3)" src="image/메인페이지.png"></p>
+<p align="center"><img width="500" height="150" alt="Untitled (3)" src="image/메인페이지.png"></p>
 
 ### 질문 결과
 
