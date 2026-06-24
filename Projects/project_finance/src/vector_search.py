@@ -24,6 +24,7 @@ def build_index(embedding_file=EMBEDDING_FILE, index_file=INDEX_FILE):
 
     # 내적(IP) 기반 인덱스 - 정규화된 벡터이므로 코사인 유사도와 동일
     index = faiss.IndexFlatIP(dim)
+    faiss.normalize_L2(embeddings)  # 정규화
     index.add(embeddings)
 
     faiss.write_index(index, index_file)
