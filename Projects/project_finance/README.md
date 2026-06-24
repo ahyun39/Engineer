@@ -10,11 +10,11 @@
 
 ### 메인 페이지
 
-![메인페이지](image/메인페이지.png)
+<p align="center"><img width="480" height="150" alt="Untitled (3)" src="image/메인페이지.png"></p>
 
 ### 질문 결과
 
-![질문결과](image/질문결과2.png)
+<p align="center"><img width="480" height="225" alt="Untitled (3)" src="image/질문결과2.png"></p>
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 유사도 기반 문서 검색
 
-![벡터임베딩](image/벡터임베딩.png)
+<p align="center"><img width="480" height="170" alt="Untitled (3)" src="image/벡터임베딩.png"></p>
 
 * 테스트 쿼리 3개("예금자 보호 한도", "보험 청약 취소", "대출 계약 해지") 실행
 * 각 결과에 코사인 유사도 점수(0.67, 0.56 등)와 함께 상위 청크 반환
