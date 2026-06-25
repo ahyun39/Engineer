@@ -62,12 +62,14 @@ docker compose up -d
 
 ### 2. 수동 실행
 
+프로젝트 루트(`project_recruit_etl/`)에서 실행합니다.
+
 ```bash
 # ETL Worker 실행 (상시 대기 — 별도 터미널)
-python etl_worker.py
+python -m src.etl_worker
 
 # 크롤링 → Kafka 발행 (또 다른 터미널)
-python kafka_producer.py
+python -m src.kafka_producer
 ```
 
 Worker가 메시지를 수신하면 30초 idle 후 자동으로 Transform → Load를 수행합니다.
@@ -79,8 +81,8 @@ crontab -e
 ```
 
 ```crontab
-0 11 * * * cd /path/to/project_recruit_etl && /opt/anaconda3/bin/python3 kafka_producer.py >> logs/cron.log 2>&1
-0 18 * * * cd /path/to/project_recruit_etl && /opt/anaconda3/bin/python3 kafka_producer.py >> logs/cron.log 2>&1
+0 11 * * * cd /path/to/project_recruit_etl && /opt/anaconda3/bin/python3 -m src.kafka_producer >> logs/cron.log 2>&1
+0 18 * * * cd /path/to/project_recruit_etl && /opt/anaconda3/bin/python3 -m src.kafka_producer >> logs/cron.log 2>&1
 ```
 
 ### 4. Kibana 접속

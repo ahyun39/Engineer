@@ -1,10 +1,6 @@
-import sys
-import os
 from datetime import datetime, date, timedelta
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-from transformer import (
+from src.transformer import (
     parse_deadline,
     parse_registered_at,
     is_deadline_closed,
