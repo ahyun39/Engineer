@@ -16,9 +16,9 @@ Projects/project_recruit_etl/data/
 Projects/project_recruit_etl/logs/
 
 # 개인 공부 파일
-Projects/project_recruit_etl/study_notes.md
-Projects/project_recruit_etl/portfolio.html
-Projects/project_recruit_etl/review.md
+Projects/project_recruit_etl/docs/study_notes.md
+Projects/project_recruit_etl/docs/portfolio.html
+Projects/project_recruit_etl/docs/review.md
 
 # 사람인 API 기반 extractor (향후 확장용 — 현재 미사용)
 Projects/project_recruit_etl/api_extractor.py
