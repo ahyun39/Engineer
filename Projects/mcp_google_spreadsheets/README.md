@@ -2,7 +2,7 @@
 
 > Google API 키, OAuth 없이 — Apps Script 하나로 스프레드시트를 Claude와 연결
 
-**[📖 인터랙티브 가이드 보기](https://ahyun39.github.io/ML-Engineer/Projects/mcp_google_spreadsheets/mcp-google-spreadsheets-guide.html)**
+**[📖 인터랙티브 가이드 보기](https://ahyun39.github.io/Engineer/Projects/mcp_google_spreadsheets/mcp-google-spreadsheets-guide.html)**
 
 ---
 
