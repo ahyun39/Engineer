@@ -1,3 +1,6 @@
+---
+render_with_liquid: false
+---
 ```python
 # views.py
 def coffee_view(request):
