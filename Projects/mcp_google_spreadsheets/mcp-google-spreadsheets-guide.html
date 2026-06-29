@@ -1010,6 +1010,7 @@ console.error(`웹 앱 URL: ${webAppUrl.replace(/\/s\/[^/]+\//, "/s/[REDACTED]/"
 </div><!-- /container -->
 </div><!-- /page-wrap -->
 
+{% raw %}
 <script>
 // ── 초기화 ──────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
@@ -1505,5 +1506,6 @@ const _obs = new IntersectionObserver(entries => {
 }, { rootMargin: "-20% 0px -70% 0px" });
 _targets.forEach(id => { const el = document.getElementById(id); if (el) _obs.observe(el); });
 </script>
+{% endraw %}
 </body>
 </html>
