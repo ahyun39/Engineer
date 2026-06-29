@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude MCP × Google Spreadsheets 자동화</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root{
+  --a:#0F766E;--al:#F0FDFA;--ab:#5EEAD4;
+  --t:#111827;--tm:#6B7280;
+  --b:#E5E7EB;--bg:#fff;--bg2:#F9FAFB;
+  --sb:220px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Pretendard,sans-serif;background:var(--bg);color:var(--t);line-height:1.8;font-size:15px}
+
+/* HERO */
+.hero{background:#0D1117;color:#fff;padding:48px 40px;border-bottom:1px solid #21262D}
+.hero-inner{max-width:calc(1200px - var(--sb));margin:0 auto}
+.hero h1{font-size:1.75rem;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;line-height:1.3}
+.hero h1 span{color:#2DD4BF}
+.hero p{color:rgba(255,255,255,.5);font-size:.9rem;margin-bottom:16px;max-width:520px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);padding:3px 10px;border-radius:3px;font-size:.7rem;font-family:monospace;color:rgba(255,255,255,.65)}
+
+/* PAGE LAYOUT */
+.page-wrap{display:grid;grid-template-columns:var(--sb) 1fr;max-width:1200px;margin:0 auto}
+
+/* SIDEBAR */
+.sidebar{border-right:1px solid var(--b);position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--bg2)}
+.sidebar-inner{padding:24px 0}
+.sidebar-title{font-size:.62rem;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.8px;padding:0 16px;margin-bottom:6px}
+.sidebar ul{list-style:none}
+.sidebar-inner>ul>li>a{display:block;padding:7px 16px;font-size:.82rem;color:#374151;text-decoration:none;border-left:2px solid transparent;transition:.12s;font-weight:500}
+.sidebar-inner>ul>li>a:hover,.sidebar-inner>ul>li>a.active{color:var(--a);background:var(--al);border-left-color:var(--a)}
+.sb-sub{margin:2px 0 4px}
+.sb-sub li a{display:block;padding:5px 16px 5px 28px;font-size:.76rem;color:var(--tm);text-decoration:none;border-left:2px solid transparent;transition:.12s}
+.sb-sub li a:hover,.sb-sub li a.active{color:var(--a);background:var(--al);border-left-color:var(--a)}
+
+/* CONTAINER */
+.container{padding:36px 40px;min-width:0;border-left:none}
+section{margin-bottom:44px}
+h2.sec-title{font-size:.8rem;font-weight:700;color:var(--tm);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.6px}
+h2.sec-title span{font-size:.85rem}
+p.desc{color:var(--tm);margin-bottom:12px;font-size:.88rem;line-height:1.7}
+
+/* ARCH */
+.arch{display:flex;align-items:center;justify-content:center;gap:0;padding:24px;background:var(--bg2);border-radius:7px;border:1px solid var(--b);flex-wrap:wrap}
+.arch-node{background:#fff;border:1px solid var(--b);border-radius:7px;padding:12px 14px;text-align:center;min-width:96px}
+.arch-node.hl{border-color:var(--ab);background:var(--al)}
+.arch-node .icon{font-size:1.5rem;display:block;margin-bottom:4px}
+.arch-node .lbl{font-size:.6rem;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.6px}
+.arch-node .name{font-size:.8rem;font-weight:700;color:var(--t);margin-top:2px}
+.arch-node .sub{font-size:.66rem;color:var(--tm);margin-top:2px}
+.arch-arr{display:flex;flex-direction:column;align-items:center;padding:0 4px;flex-shrink:0}
+.arch-arr .ln{position:relative;width:44px;height:1px;background:var(--b)}
+.arch-arr .ln::after{content:'▶';position:absolute;right:-5px;top:-7px;color:var(--tm);font-size:10px}
+.arch-arr .proto{font-size:.6rem;color:var(--tm);margin-top:4px;white-space:nowrap}
+
+/* STEP CARDS */
+.step-card{background:#fff;border-radius:7px;border:1px solid var(--b);margin-bottom:12px;overflow:hidden}
+.step-hd{padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.step-num{background:var(--a);color:#fff;width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;flex-shrink:0}
+.step-hd h3{font-size:.86rem;font-weight:700;color:var(--t);margin:0}
+.step-hd small{color:var(--tm);font-size:.7rem;margin-top:1px;display:block}
+.step-body{padding:14px 16px}
+
+/* CODE */
+.code-wrap{margin:10px 0;border-radius:6px;overflow:hidden;border:1px solid #21262D}
+.code-hd{background:#161B22;padding:6px 12px;display:flex;justify-content:space-between;align-items:center}
+.code-hd .fn{font-size:.7rem;color:#8B949E;font-family:monospace}
+.copy-btn{background:transparent;border:1px solid #30363D;color:#8B949E;padding:2px 9px;border-radius:3px;font-size:.66rem;cursor:pointer;transition:.15s}
+.copy-btn:hover{border-color:var(--a);color:#2DD4BF}
+.copy-btn.copied{color:#34d399;border-color:#34d399}
+.code-wrap pre{margin:0!important;border-radius:0!important}
+.code-wrap pre code{font-size:.8rem!important;padding:16px!important}
+
+/* NOTES */
+.note{border-radius:5px;padding:9px 13px;margin:10px 0;font-size:.82rem;display:flex;gap:8px;align-items:flex-start}
+.note.warn{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #f59e0b;color:#92400e}
+.note.danger{background:#fef2f2;border:1px solid #fecaca;border-left:3px solid #ef4444;color:#991b1b}
+.note.info{background:var(--al);border:1px solid var(--ab);border-left:3px solid var(--a);color:#134e4a}
+.note .ni{font-size:.88rem;flex-shrink:0;margin-top:1px}
+
+/* DEMO */
+.demo-wrap{background:#fff;border-radius:7px;border:1px solid var(--b);overflow:hidden}
+.demo-hero{background:#0D1117;color:#fff;padding:14px 18px}
+.demo-hero h3{font-size:.88rem;font-weight:700;margin:0 0 2px}
+.demo-hero p{color:rgba(255,255,255,.45);font-size:.76rem;margin:0}
+
+.demo-cfg{padding:12px 18px;background:var(--bg2);border-bottom:1px solid var(--b);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cfg-field label{display:block;font-size:.62rem;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.cfg-field input{width:100%;padding:7px 9px;border:1px solid var(--b);border-radius:5px;font-size:.78rem;font-family:monospace;background:#fff;transition:.2s;color:var(--t)}
+.cfg-field input:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 2px rgba(13,118,110,.1)}
+.cfg-field input::placeholder{color:#d1d5db}
+
+/* TABS */
+.demo-tabs{display:flex;border-bottom:1px solid var(--b);background:var(--bg2);overflow-x:auto}
+.dtab{padding:9px 15px;font-size:.78rem;font-weight:600;color:var(--tm);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:.12s;white-space:nowrap}
+.dtab.active{color:var(--a);border-bottom-color:var(--a);background:#fff}
+.dtab:hover:not(.active){color:var(--t);background:var(--b)}
+
+.tab-panel{display:none;padding:18px;overflow-x:auto}
+.tab-panel.active{display:block}
+
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;min-width:520px}
+.panel-lbl{font-size:.62rem;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+
+/* INPUTS */
+.inp-g{margin-bottom:10px}
+.inp-g label{display:block;font-size:.78rem;font-weight:500;color:#374151;margin-bottom:3px}
+.inp-g input,.inp-g textarea{width:100%;padding:7px 9px;border:1px solid var(--b);border-radius:5px;font-size:.8rem;font-family:monospace;resize:vertical;transition:.2s;color:var(--t)}
+.inp-g input:focus,.inp-g textarea:focus{outline:none;border-color:var(--a)}
+
+/* PAYLOAD */
+.payload-box{background:#0D1117;border-radius:5px;padding:9px 11px;font-family:monospace;font-size:.7rem;color:#8B949E;min-height:76px;max-height:130px;overflow:auto;margin-bottom:10px;white-space:pre;line-height:1.6}
+.payload-box .pk{color:#79c0ff}
+.payload-box .ps{color:#a5f3a5}
+.payload-box .pm{color:#ffa657}
+.payload-box .pp{color:#ff7b72}
+
+/* RUN BUTTON */
+.run-btn{width:100%;padding:9px;background:var(--a);color:#fff;border:none;border-radius:5px;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.run-btn:hover:not(:disabled){background:#0f6b64}
+.run-btn:disabled{background:#9ca3af;cursor:not-allowed}
+.run-btn.ok{background:#059669}
+.run-btn.err{background:#dc2626}
+
+/* RESULT */
+.result-box{background:var(--bg2);border:1px solid var(--b);border-radius:6px;min-height:190px;overflow:auto}
+.result-empty{color:#d1d5db;text-align:center;padding:44px 20px;font-size:.82rem}
+.result-empty span{display:block;font-size:1.6rem;margin-bottom:6px}
+.result-tbl{min-width:100%;border-collapse:collapse;font-size:.78rem}
+.result-tbl th{background:var(--al);color:var(--a);padding:6px 10px;text-align:left;font-weight:600;font-size:.66rem;border-bottom:1.5px solid var(--ab);position:sticky;top:0;white-space:nowrap}
+.result-tbl td{padding:5px 10px;border-bottom:1px solid var(--b);color:#374151;white-space:nowrap}
+.result-tbl tr:hover td{background:#f0fdfb}
+.result-tbl tr:last-child td{border-bottom:none}
+
+/* STATUS */
+.status{padding:7px 11px;border-radius:5px;font-size:.8rem;margin-bottom:9px;display:none}
+.status.show{display:block}
+.status.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.status.err,.status.error{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.status.loading{background:var(--al);color:#134e4a;border:1px solid var(--ab)}
+
+/* WRITE GRID */
+.grid-wrap{border:1px solid var(--b);border-radius:5px;overflow:hidden;margin-bottom:10px}
+.grid-hdr{display:grid;background:var(--al);border-bottom:1.5px solid var(--ab)}
+.grid-hdr span{padding:4px 8px;font-size:.62rem;font-weight:700;color:var(--a);text-align:center;letter-spacing:.5px}
+.grid-row{display:grid;border-bottom:1px solid var(--b)}
+.grid-row:last-child{border-bottom:none}
+.grid-row input{padding:6px 8px;border:none;border-right:1px solid var(--b);font-size:.78rem;font-family:monospace;background:#fff;min-width:0;color:var(--t)}
+.grid-row input:last-child{border-right:none}
+.grid-row input:focus{outline:none;background:var(--al)}
+
+/* GRID CONTROLS */
+.grid-ctrl{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:.78rem;color:var(--tm);flex-wrap:wrap}
+.grid-ctrl button{background:#fff;border:1px solid var(--b);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:.72rem;transition:.12s;color:#374151}
+.grid-ctrl button:hover{border-color:#9ca3af}
+
+/* COLUMN NAMES ROW */
+.grid-col-names{display:grid;background:var(--bg2);border-bottom:1px solid var(--b)}
+.grid-col-names span{padding:3px 8px;font-size:.68rem;color:#374151;text-align:center;border-right:1px solid var(--b);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grid-col-names span:last-child{border-right:none}
+
+/* CHAT SIM */
+.scenario-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.scenario-pill{padding:5px 12px;background:#fff;border:1px solid var(--b);border-radius:4px;font-size:.76rem;cursor:pointer;transition:.12s;color:#374151}
+.scenario-pill:hover{background:var(--al);border-color:var(--ab);color:var(--a)}
+.scenario-pill.active{background:var(--a);border-color:var(--a);color:#fff}
+
+.chat-log{background:var(--bg2);border:1px solid var(--b);border-radius:7px;padding:14px;min-height:270px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.chat-msg{display:flex;gap:7px;animation:fadeUp .2s ease}
+.chat-msg.user{flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.av.u{background:var(--al)}
+.av.c{background:var(--a);color:#fff;font-size:.66rem;font-weight:700}
+.av.t{background:#ecfdf5}
+.bubble{max-width:82%;padding:7px 11px;border-radius:8px;font-size:.78rem;line-height:1.55}
+.chat-msg.user .bubble{background:var(--a);color:#fff;border-bottom-right-radius:2px}
+.chat-msg.assistant .bubble{background:#fff;border:1px solid var(--b);border-bottom-left-radius:2px;color:#374151}
+.chat-msg.tool .bubble{background:#0D1117;color:#8B949E;font-family:monospace;font-size:.68rem;border-bottom-left-radius:2px;max-width:95%;white-space:pre-wrap}
+.tool-tag{font-size:.62rem;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.tool-tag.call{color:#79c0ff}
+.tool-tag.result{color:#34d399}
+.typing{display:inline-flex;gap:4px;padding:2px 0}
+.typing i{width:5px;height:5px;background:#d1d5db;border-radius:50%;animation:bounce 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+
+/* FLOW LOG */
+.flow-log{margin-top:10px;background:#0D1117;border-radius:5px;padding:10px 11px;max-height:110px;overflow:auto}
+.flow-log .fl-item{font-family:monospace;font-size:.68rem;line-height:1.8;color:#475569;display:flex;gap:6px}
+.flow-log .fl-time{color:#334155;flex-shrink:0}
+.flow-log .fl-req{color:#79c0ff}
+.flow-log .fl-res{color:#34d399}
+.flow-log .fl-err{color:#f87171}
+
+/* SUB STEPS */
+.sub-steps{list-style:none;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px}
+.sub-steps li{display:flex;gap:9px;align-items:flex-start;font-size:.83rem;color:#374151;line-height:1.6}
+.sub-steps li .sn{background:var(--a);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.sub-steps li code{background:#F1F5F9;border:1px solid #E2E8F0;padding:0 5px;border-radius:3px;font-size:.78rem;color:#0F766E}
+
+/* SECURITY TABLE */
+.sec-tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.sec-tbl th{background:#fef2f2;color:#991b1b;padding:7px 11px;text-align:left;border-bottom:1.5px solid #fecaca;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.sec-tbl td{padding:8px 11px;border-bottom:1px solid #fee2e2;vertical-align:top}
+.sec-tbl td:first-child{font-weight:600;color:var(--t);font-size:.8rem;white-space:nowrap}
+.sec-tbl td:last-child{color:#374151;font-size:.8rem}
+.sec-tbl tr:last-child td{border-bottom:none}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sum-card{background:#fff;border:1px solid var(--b);border-radius:7px;padding:14px;text-align:center}
+.sum-card .si{font-size:1.4rem;margin-bottom:5px}
+.sum-card .st{font-weight:700;color:var(--t);font-size:.82rem;margin-bottom:3px}
+.sum-card .sd{color:var(--tm);font-size:.74rem}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+
+@media(max-width:900px){
+  .page-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .container{padding:28px 20px}
+}
+@media(max-width:640px){
+  .hero{padding:32px 20px}
+  .hero h1{font-size:1.4rem}
+  .split{grid-template-columns:1fr}
+  .demo-cfg{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .arch{flex-direction:column}
+  .arch-arr .ln{width:1px;height:24px;background:var(--b)}
+  .arch-arr .ln::after{content:'▼';right:-7px;top:auto;bottom:-4px}
+}
+.chat-demo{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.chat-bubble{display:flex;gap:10px;align-items:flex-start}
+.chat-bubble.user{flex-direction:row-reverse}
+.chat-role{flex-shrink:0;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;margin-top:2px}
+.chat-bubble.user .chat-role{background:#4f46e5;color:#fff}
+.chat-bubble.assistant .chat-role{background:var(--b2);color:var(--fg-muted)}
+.chat-text{background:var(--b2);border:1px solid var(--b);border-radius:12px;padding:12px 16px;font-size:.88rem;line-height:1.6;color:var(--fg)}
+.chat-bubble.user .chat-text{background:#eef2ff;border-color:#c7d2fe;color:#1e1b4b}
+.chat-text p{margin:0 0 8px}
+.chat-text p:last-child{margin:0}
+.chat-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.82rem}
+.chat-table th,.chat-table td{border:1px solid var(--b);padding:4px 10px;text-align:center}
+.chat-table th{background:var(--b);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Claude MCP <span>× Google Spreadsheets</span> 자동화</h1>
+    <p>Google API 키, OAuth 없이 — Apps Script로 하나로 스프레드시트를 Claude와 연결</p>
+    <div class="badges">
+      <span class="badge">MCP</span>
+      <span class="badge">Google Apps Script</span>
+      <span class="badge">Node.js</span>
+      <span class="badge">Claude Desktop</span>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+<nav class="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-title">목차</div>
+    <ul>
+      <li><a href="#arch" class="slink">전체 구조</a></li>
+      <li>
+        <a href="#steps" class="slink">구현 단계</a>
+        <ul class="sb-sub">
+          <li><a href="#step1" class="slink">1. GAS 웹 앱 만들기</a></li>
+          <li><a href="#step2" class="slink">2. 프로젝트 초기화</a></li>
+          <li><a href="#step3" class="slink">3. MCP 서버 코드</a></li>
+          <li><a href="#step4" class="slink">4. Claude Desktop 등록</a></li>
+        </ul>
+      </li>
+      <li><a href="#demo" class="slink">인터랙티브 데모</a></li>
+      <li><a href="#security" class="slink">보안 주의사항</a></li>
+      <li><a href="#summary" class="slink">핵심 정리</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+
+<!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
+<section id="arch">
+  <h2 class="sec-title"><span>🏗</span> 전체 구조</h2>
+  <p class="desc">Claude가 자연어로 지시를 내리면 MCP 서버가 중간에서 Google Apps Script(GAS)로 HTTP 요청을 보냅니다. GAS는 스프레드시트를 직접 읽고 쓴 뒤 결과를 반환합니다.</p>
+  <div class="arch">
+    <div class="arch-node hl">
+      <span class="icon">🤖</span>
+      <div class="lbl">AI</div>
+      <div class="name">Claude</div>
+      <div class="sub">Desktop / CLI</div>
+    </div>
+    <div class="arch-arr">
+      <div class="ln"></div>
+      <div class="proto">stdio (MCP)</div>
+    </div>
+    <div class="arch-node hl">
+      <span class="icon">⚙️</span>
+      <div class="lbl">MCP Server</div>
+      <div class="name">Node.js</div>
+      <div class="sub">server.js</div>
+    </div>
+    <div class="arch-arr">
+      <div class="ln"></div>
+      <div class="proto">HTTP POST</div>
+    </div>
+    <div class="arch-node">
+      <span class="icon">📃</span>
+      <div class="lbl">Google</div>
+      <div class="name">Apps Script</div>
+      <div class="sub">Web App (doPost)</div>
+    </div>
+    <div class="arch-arr">
+      <div class="ln"></div>
+      <div class="proto">Sheets API</div>
+    </div>
+    <div class="arch-node">
+      <span class="icon">📊</span>
+      <div class="lbl">Google</div>
+      <div class="name">Spreadsheet</div>
+      <div class="sub">읽기 / 쓰기</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STEPS ═══════════════════ -->
+<section id="steps">
+  <h2 class="sec-title"><span>📋</span> 구현 단계</h2>
+
+  <!-- STEP 1 -->
+  <div class="step-card" id="step1">
+    <div class="step-hd">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Google Apps Script 웹 앱 만들기</h3>
+        <small>스프레드시트 → 확장 프로그램 → Apps Script</small>
+      </div>
+    </div>
+    <div class="step-body">
+      <p class="desc">GAS가 HTTP 엔드포인트 역할을 합니다. MCP 서버가 JSON을 POST하면 doPost()가 시트를 읽거나 씁니다. 아래 순서대로 진행하세요.</p>
+      <ol class="sub-steps">
+        <li><span class="sn">1</span><span>스프레드시트를 열고 상단 메뉴에서 <strong>확장 프로그램 → Apps Script</strong>를 클릭해 편집기로 들어갑니다.</span></li>
+        <li><span class="sn">2</span><span>편집기에 기본으로 작성된 코드를 <strong>전부 지우고</strong> 아래 코드를 복사해 붙여넣으세요.</span></li>
+        <li><span class="sn">3</span><span>편집기 상단에 <strong>"제목 없는 프로젝트"</strong>라고 되어있는 이름을 원하는 이름으로 수정하세요. (예: <code>Claude MCP Server</code>)</span></li>
+        <li><span class="sn">4</span><span><kbd>Ctrl</kbd>+<kbd>S</kbd> 또는 저장 버튼을 눌러 코드를 저장합니다.</span></li>
+        <li><span class="sn">5</span><span>오른쪽 상단 <strong>배포 → 새 배포</strong>를 클릭합니다. 유형 선택 화면에서 톱니바퀴(도구) 버튼을 눌러 <strong>웹 앱</strong>을 선택하세요. <strong>다음 사용자로 실행: 나</strong>, <strong>액세스 권한이 있는 사용자: 모든 사용자</strong>로 설정한 뒤 <strong>배포</strong>를 누릅니다.</span></li>
+        <li><span class="sn">6</span><span><strong>액세스 승인</strong> 버튼이 나타나면 클릭합니다. Google 계정 선택 팝업이 열리면 계정을 선택하고, 경고 화면에서 <strong>Advanced</strong>를 클릭 → <strong>Go to [프로젝트명] (unsafe)</strong> 클릭 → <strong>Continue</strong>를 눌러 권한을 승인합니다.</span></li>
+        <li><span class="sn">7</span><span>배포가 완료되면 나타나는 팝업에서 <strong>웹 앱 URL을 복사</strong>합니다. 이 URL이 MCP 서버의 엔드포인트입니다.</span></li>
+        <li><span class="sn">8</span><span>나중에 URL을 다시 확인하려면 <strong>배포 → 배포 관리</strong>를 눌러 <code>Claude MCP Server</code> 항목을 열면 웹 앱 URL을 다시 복사할 수 있습니다.</span></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">Code.gs (Google Apps Script)</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-javascript">/**
+ * Claude MCP Server for Google Apps Script
+ * 클로드와 구글 워크스페이스를 연결하는 MCP 서버
+ */
+// MCP 서버 설정
+const MCP_CONFIG = {
+  name: "google-workspace-mcp",
+  version: "1.0.0",
+  description: "Google Workspace integration for Claude via MCP",
+};
+// 도구 목록 정의
+const TOOLS = {
+  READ_SHEET: {
+    name: "read_google_sheet",
+    description: "Google Sheets에서 데이터를 읽어옵니다",
+    inputSchema: {
+      type: "object",
+      properties: {
+        spreadsheetId: {
+          type: "string",
+          description: "스프레드시트 ID",
+        },
+        range: {
+          type: "string",
+          description: "읽을 범위 (예: A1:C10)",
+          default: "A:Z",
+        },
+      },
+      required: ["spreadsheetId"],
+    },
+  },
+  WRITE_SHEET: {
+    name: "write_google_sheet",
+    description: "Google Sheets에 데이터를 씁니다",
+    inputSchema: {
+      type: "object",
+      properties: {
+        spreadsheetId: {
+          type: "string",
+          description: "스프레드시트 ID",
+        },
+        range: {
+          type: "string",
+          description: "쓸 범위 (예: A1:C10)",
+        },
+        values: {
+          type: "array",
+          description: "쓸 데이터 (2차원 배열)",
+        },
+      },
+      required: ["spreadsheetId", "range", "values"],
+    },
+  },
+};
+// MCP 서버로부터 POST 요청을 받는 진입점
+// Claude → Node.js MCP 서버 → 여기(GAS 웹 앱) 순서로 호출됩니다
+function doPost(e) {
+  try {
+    const request = JSON.parse(e.postData.contents); // 요청 본문을 JSON으로 파싱
+    console.log("MCP Request:", request);
+    // 비밀키 검증 — 스크립트 속성에 MCP_SECRET이 설정된 경우에만 검사합니다
+    const secret = PropertiesService.getScriptProperties().getProperty("MCP_SECRET");
+    if (secret && request.secret !== secret) return createErrorResponse("Unauthorized");
+
+    if (request.method === "tools/call") {
+      return createResponse(handleToolCall(request.params));
+    }
+    return createErrorResponse("Unknown method: " + request.method);
+  } catch (error) {
+    console.error("MCP Error:", error);
+    return createErrorResponse("Server error: " + error.message);
+  }
+}
+
+/**
+ * 도구 목록 반환
+ */
+function handleToolsList() {
+  return {
+    tools: Object.values(TOOLS),
+  };
+}
+
+// 요청된 도구 이름에 따라 읽기/쓰기 함수로 분기합니다
+function handleToolCall(params) {
+  const { name, arguments: args } = params;
+  try {
+    if (name === "read_google_sheet") return readGoogleSheet(args);
+    if (name === "write_google_sheet") return writeGoogleSheet(args);
+    throw new Error("Unknown tool: " + name);
+  } catch (error) {
+    return { isError: true, content: [{ type: "text", text: `도구 실행 오류: ${error.message}` }] };
+  }
+}
+
+// 지정한 범위의 데이터를 읽어 2차원 배열로 반환합니다
+// 빈 행은 자동으로 제거됩니다
+function readGoogleSheet(args) {
+  const { spreadsheetId, range = "A:Z" } = args;
+  // spreadsheetId 화이트리스트 — 스크립트 속성 ALLOWED_IDS에 등록된 ID만 허용합니다
+  const allowed = PropertiesService.getScriptProperties().getProperty("ALLOWED_IDS");
+  if (allowed && !allowed.split(",").map(s => s.trim()).includes(spreadsheetId)) throw new Error("허가되지 않은 spreadsheetId");
+  const sheet = SpreadsheetApp.openById(spreadsheetId).getActiveSheet();
+  const data = sheet.getRange(range).getValues();
+  const filteredData = data.filter((row) => row.some((cell) => cell !== "")); // 빈 행 제거
+  return {
+    content: [{ type: "text", text: `스프레드시트 데이터 (${filteredData.length}행):\n${JSON.stringify(filteredData, null, 2)}` }],
+  };
+}
+
+// 지정한 범위에 2차원 배열 데이터를 씁니다
+// range 크기와 values 크기가 일치해야 합니다 (예: A1:C3 → 3행×3열)
+function writeGoogleSheet(args) {
+  const { spreadsheetId, range, values } = args;
+  if (!values.length) throw new Error("values가 비어있습니다");
+  // spreadsheetId 화이트리스트 — 스크립트 속성 ALLOWED_IDS에 등록된 ID만 허용합니다
+  const allowed = PropertiesService.getScriptProperties().getProperty("ALLOWED_IDS");
+  if (allowed && !allowed.split(",").map(s => s.trim()).includes(spreadsheetId)) throw new Error("허가되지 않은 spreadsheetId");
+  const sheet = SpreadsheetApp.openById(spreadsheetId).getActiveSheet();
+  const target = sheet.getRange(range);
+  // range와 values 크기가 다르면 GAS에서 오류가 나므로 미리 검증합니다
+  if (target.getNumRows() !== values.length || target.getNumColumns() !== values[0].length) {
+    throw new Error(
+      `range ${range} (${target.getNumRows()}×${target.getNumColumns()})와 values (${values.length}×${values[0].length}) 크기가 다릅니다`
+    );
+  }
+  target.setValues(values);
+  return {
+    content: [{ type: "text", text: `${values.length}행의 데이터를 ${range}에 저장했습니다.` }],
+  };
+}
+
+// 성공 응답: JSON 문자열을 ContentService로 감싸서 반환합니다
+function createResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// 오류 응답: isError 플래그를 true로 설정해 MCP 서버가 에러를 인식하게 합니다
+function createErrorResponse(message) {
+  return ContentService.createTextOutput(
+    JSON.stringify({ isError: true, content: [{ type: "text", text: message }] })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * 테스트 함수
+ */
+function testMCPServer() {
+  console.log("MCP 서버 테스트 시작");
+  // 도구 목록 테스트
+  const toolsList = handleToolsList();
+  console.log("도구 목록:", toolsList);
+  console.log("MCP 서버가 정상적으로 설정되었습니다!");
+}
+
+// GAS 편집기에서 직접 실행해 읽기 동작을 테스트하는 함수입니다
+function testReadSheet() {
+  const spreadsheetId = "YOUR_SPREADSHEET_ID"; // 스프레드시트 url에서 YOUR_SPREADSHEET_ID 부분에 해당하는 ID를 복사하세요. (https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?gid=0#gid=0)
+  try {
+    const result = readGoogleSheet({ spreadsheetId, range: "A1:D10" });
+    console.log("스프레드시트 읽기 성공!", result);
+  } catch (error) {
+    console.error("스프레드시트 읽기 실패:", error);
+  }
+}</code></pre>
+      </div>
+      <div class="note warn">
+        <span class="ni">⚠️</span>
+        <div>배포 시 <strong>실행 계정: 나</strong>, <strong>액세스: 모든 사용자</strong>로 설정해야 브라우저 및 외부 서버에서 호출할 수 있습니다. 배포 후 발급되는 <strong>웹 앱 URL을 복사</strong>해 두세요.</div>
+      </div>
+      <div class="note info">
+        <span class="ni">🔑</span>
+        <div><strong>보안 설정 (권장): 스크립트 속성 등록</strong><br>
+        GAS 편집기 상단 메뉴 <strong>프로젝트 설정(⚙️) → 스크립트 속성 → 속성 추가</strong>에서 두 값을 등록하세요.<br>
+        • <code>MCP_SECRET</code>: 랜덤 문자열 (터미널에서 <code>openssl rand -hex 16</code> 으로 생성)<br>
+        • <code>ALLOWED_IDS</code>: 허가할 스프레드시트 ID (여러 개면 쉼표 구분, 예: <code>ID1,ID2</code>)<br>
+        동일한 <code>MCP_SECRET</code> 값을 Step 4의 <code>claude_desktop_config.json</code> → <code>env.MCP_SECRET</code>에도 넣어야 합니다. 속성을 등록하지 않으면 검증을 건너뜁니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card" id="step2">
+    <div class="step-hd">
+      <div class="step-num">2</div>
+      <div>
+        <h3>프로젝트 초기화 & 설정 파일</h3>
+        <small>Node.js MCP 서버</small>
+      </div>
+    </div>
+    <div class="step-body">
+      <ol class="sub-steps">
+        <li><span class="sn">1</span><span>원하는 위치에 프로젝트 폴더를 생성하고 소스·설정 파일을 담을 하위 디렉토리(<code>src/</code>, <code>config/</code>)를 만듭니다.</span></li>
+        <li><span class="sn">2</span><span>프로젝트 루트에 <code>package.json</code>을 생성합니다. ES Module 타입과 시작·개발 스크립트, 의존성을 포함합니다.</span></li>
+        <li><span class="sn">3</span><span><code>npm install</code>로 의존성을 설치합니다.</span></li>
+        <li><span class="sn">4</span><span><code>config/mcp-config.json</code>을 생성합니다. <code>YOUR_WEB_APP_URL_HERE</code>와 <code>YOUR_SPREADSHEET_ID_HERE</code>는 나중에 실제 값으로 교체하세요.</span></li>
+      </ol>
+
+      <!-- STEP 1: 폴더 생성 -->
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">bash — 프로젝트 폴더 생성</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-bash">mkdir claude-gas-mcp && cd claude-gas-mcp
+mkdir src && mkdir config</code></pre>
+      </div>
+
+      <!-- STEP 2: package.json -->
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">package.json</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-json">{
+  "name": "claude-gas-mcp",
+  "version": "1.0.0",
+  "description": "Claude와 Google Apps Script 연결을 위한 MCP 클라이언트",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": ["claude", "mcp", "google-apps-script"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "axios": "^1.6.0"
+  }
+}</code></pre>
+      </div>
+
+      <!-- STEP 3: npm install -->
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">bash — 의존성 설치</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-bash">npm install</code></pre>
+      </div>
+
+      <!-- STEP 4: mcp-config.json -->
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">config/mcp-config.json</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-json">{
+  "name": "Google Apps Script MCP Server",
+  "version": "1.0.0",
+  "description": "Google Workspace와 Claude 연결",
+  "config": {
+    "webAppUrl": "YOUR_WEB_APP_URL",
+    "testSpreadsheetId": "YOUR_SPREADSHEET_ID"
+  },
+  "tools": ["read_google_sheet", "write_google_sheet"]
+}</code></pre>
+      </div>
+      <div class="note info">
+        <span class="ni">📁</span>
+        <div>여기까지 완료하면 폴더 구조는 <code>claude-gas-mcp/src/</code>, <code>claude-gas-mcp/config/mcp-config.json</code>, <code>claude-gas-mcp/package.json</code> 이 됩니다. Step 3에서 <code>src/server.js</code>를 작성합니다.</div>
+      </div>
+      <div class="note danger">
+        <span class="ni">🔒</span>
+        <div>웹 앱 URL(= API key)은 config 파일이 아닌 <strong>환경변수</strong>로 관리합니다. 아래 Step 4에서 <code>claude_desktop_config.json</code>에 변수를 추가합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card" id="step3">
+    <div class="step-hd">
+      <div class="step-num">3</div>
+      <div>
+        <h3>MCP 서버 코드</h3>
+        <small>src/server.js</small>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">src/server.js</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-javascript">// MCP SDK: Claude와 stdio로 통신하는 서버 구현체
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { readFileSync } from "fs";
+
+// 설정 파일에서 기본값을 읽어옵니다
+const config = JSON.parse(readFileSync(new URL("../config/mcp-config.json", import.meta.url), "utf8"));
+// GAS 웹 앱 URL은 환경변수 우선 — 소스에 URL이 노출되지 않도록 env로 주입합니다
+const webAppUrl = process.env.GAS_WEB_APP_URL || config.webAppUrl;
+if (!webAppUrl) throw new Error("GAS_WEB_APP_URL 환경변수 또는 config.webAppUrl 설정 필요");
+
+// MCP 서버 인스턴스 생성
+const server = new Server(
+  { name: "google-apps-script-mcp", version: "1.0.0" },
+  { capabilities: { tools: {} } } // 이 서버가 tools 기능을 제공한다고 선언
+);
+
+server.onerror = (error) => console.error("[MCP Error]", error);
+process.on("SIGINT", async () => { await server.close(); process.exit(0); }); // Ctrl+C 종료 처리
+
+// ① Claude가 "어떤 도구를 쓸 수 있어?" 라고 물을 때 응답합니다
+// Claude는 이 목록을 보고 대화 중 적절한 도구를 자동으로 선택합니다
+server.setRequestHandler(ListToolsRequestSchema, async () => ({
+  tools: [
+    {
+      name: "read_google_sheet",
+      description: "Google Sheets에서 데이터를 읽어옵니다",
+      inputSchema: {
+        type: "object",
+        properties: {
+          spreadsheetId: { type: "string", description: "스프레드시트 ID" },
+          range: { type: "string", description: "읽을 범위 (예: A1:C10)", default: "A:Z" },
+        },
+        required: ["spreadsheetId"],
+      },
+    },
+    {
+      name: "write_google_sheet",
+      description: "Google Sheets에 데이터를 씁니다",
+      inputSchema: {
+        type: "object",
+        properties: {
+          spreadsheetId: { type: "string", description: "스프레드시트 ID" },
+          range: { type: "string", description: "쓸 범위 (예: A1:C10)" },
+          values: { type: "array", description: "쓸 데이터 (2차원 배열)" },
+        },
+        required: ["spreadsheetId", "range", "values"],
+      },
+    },
+  ],
+}));
+
+// ② Claude가 실제로 도구를 실행할 때 호출됩니다
+// Claude의 요청을 그대로 GAS 웹 앱에 전달하고, 응답을 Claude에게 돌려줍니다
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+  try {
+    if (!["read_google_sheet", "write_google_sheet"].includes(name)) {
+      throw new Error(`알 수 없는 도구: ${name}`);
+    }
+    // GAS 웹 앱에 HTTP POST로 요청 전달 (30초 타임아웃)
+    const response = await fetch(webAppUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ method: "tools/call", params: { name, arguments: args }, ...(process.env.MCP_SECRET && { secret: process.env.MCP_SECRET }) }),
+      signal: AbortSignal.timeout(30000),
+    });
+    const data = await response.json();
+    return { content: [{ type: "text", text: data.content?.[0]?.text || "완료" }] };
+  } catch (error) {
+    return { content: [{ type: "text", text: `오류 발생: ${error.message}` }], isError: true };
+  }
+});
+
+// stdio 트랜스포트로 Claude Desktop과 연결 시작
+const transport = new StdioServerTransport();
+await server.connect(transport);
+console.error("Google Apps Script MCP 서버가 시작되었습니다.");
+// URL의 deploy ID는 로그에 마스킹 — 보안상 민감한 정보가 로그에 남지 않도록 합니다
+console.error(`웹 앱 URL: ${webAppUrl.replace(/\/s\/[^/]+\//, "/s/[REDACTED]/")}`);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card" id="step4">
+    <div class="step-hd">
+      <div class="step-num">4</div>
+      <div>
+        <h3>Claude Desktop에 MCP 등록</h3>
+        <small>~/Library/Application Support/Claude/claude_desktop_config.json</small>
+      </div>
+    </div>
+    <div class="step-body">
+      <ol class="sub-steps">
+        <li><span class="sn">1</span><span>Claude Desktop 앱 상단 메뉴에서 <strong>Claude → 설정</strong>을 엽니다.</span></li>
+        <li><span class="sn">2</span><span>왼쪽 메뉴에서 <strong>개발자</strong> 탭을 선택합니다.</span></li>
+        <li><span class="sn">3</span><span><strong>구성 편집</strong> 버튼을 누르면 <code>claude_desktop_config.json</code> 파일이 텍스트 편집기로 열립니다.</span></li>
+        <li><span class="sn">4</span><span>아래 내용을 붙여넣고, <code>/절대경로/</code>와 <code>GAS_WEB_APP_URL</code> 값을 본인 환경에 맞게 수정한 뒤 저장합니다.</span></li>
+        <li><span class="sn">5</span><span>파일 저장 후 <strong>Claude Desktop을 완전히 종료했다가 다시 실행</strong>합니다.</span></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-hd">
+          <span class="fn">claude_desktop_config.json</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code class="language-json">{
+  "mcpServers": {
+    "google-apps-script-mcp": {
+      "command": "node",
+      "args": ["/절대경로/claude-gas-mcp/src/server.js"],
+      "env": {
+        "NODE_ENV": "production",
+        "GAS_WEB_APP_URL": "YOUR_WEB_APP_URL",
+        "MCP_SECRET": "YOUR_SECRET_KEY"
+      }
+    },
+  }
+}</code></pre>
+      </div>
+      <div class="note warn">
+        <span class="ni">⚠️</span>
+        <div><code>/절대경로/claude-gas-mcp/src/server.js</code>는 실제 경로로 바꿔야 합니다. 터미널에서 프로젝트 폴더 안에서 <code>pwd</code>를 실행하면 절대경로를 확인할 수 있습니다.</div>
+      </div>
+      <div class="note info">
+        <span class="ni">💡</span>
+        <div>웹 앱 URL을 <code>env.GAS_WEB_APP_URL</code>에 넣으면 config 파일이나 소스 코드에 노출되지 않습니다. 파일 저장 후 Claude Desktop을 재시작하고, 채팅창에 <code>+</code> > <code>커넥터</code>에 들어가면 <code>google-apps-script-mcp</code>가 표시됩니다.</div>
+      </div>
+
+      <h4 style="margin:28px 0 12px;font-size:.95rem;color:var(--fg)">동작 확인 예시</h4>
+      <p style="margin:0 0 16px;font-size:.88rem;color:var(--fg-muted)">Claude Desktop을 재시작한 뒤 아래처럼 대화하면 MCP 서버 연결 상태와 실제 데이터 읽기를 한 번에 확인할 수 있습니다.</p>
+      <div class="chat-demo">
+        <div class="chat-bubble user">
+          <span class="chat-role">나</span>
+          <span class="chat-text">Google Apps Script MCP 서버가 연결되었는지 확인하고, SPREADSHEET_ID의 데이터를 읽어서 보여줘.</span>
+        </div>
+        <div class="chat-bubble assistant">
+          <span class="chat-role">Claude</span>
+          <div class="chat-text">
+            <p>연결 상태: google-apps-script MCP 서버 정상 연결됨 (도구 재로딩 후 정상 동작)</p>
+            <p>스프레드시트 데이터 (1행):</p>
+            <table class="chat-table">
+              <thead><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead>
+              <tbody><tr><td colspan="5" style="text-align:center;color:var(--fg-muted);font-style:italic">헤더 행만 있고 데이터 행은 없습니다.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ INTERACTIVE DEMO ═══════════════════ -->
+<section id="demo">
+  <h2 class="sec-title"><span>🧪</span> 인터랙티브 데모</h2>
+  <p class="desc">아래에 GAS 웹 앱 URL과 스프레드시트 ID를 입력하면 실제 읽기/쓰기 요청을 직접 테스트할 수 있습니다.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-hero">
+      <h3>직접 테스트해 보기</h3>
+      <p>실제 GAS 엔드포인트에 MCP 형식의 JSON을 POST합니다 — 코드 없이 브라우저에서 바로 확인</p>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="demo-cfg">
+      <div class="cfg-field">
+        <label>GAS 웹 앱 URL</label>
+        <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <div class="cfg-field">
+        <label>스프레드시트 ID</label>
+        <input id="cfgSheetId" placeholder="SPREADSHEET_ID...">
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="demo-tabs">
+      <button class="dtab active" onclick="switchTab('read',this)">🅡 읽기</button>
+      <button class="dtab" onclick="switchTab('write',this)">🅦 쓰기</button>
+      <button class="dtab" onclick="switchTab('edit',this)">🅔 읽어서 수정</button>
+      <button class="dtab" onclick="switchTab('sim',this)">🅢 Claude 시뮬레이션</button>
+    </div>
+
+    <!-- ── TAB: READ ── -->
+    <div id="tab-read" class="tab-panel active">
+      <div class="split">
+        <!-- LEFT: 요청 -->
+        <div>
+          <div class="panel-lbl">요청 구성</div>
+          <div class="inp-g">
+            <label>범위 (Range)</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input id="readRange" value="A1:D10" oninput="updateReadPayload()" style="flex:1;margin:0">
+              <button onclick="readAll()" style="padding:9px 12px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;color:#475569;flex-shrink:0">전체 불러오기</button>
+            </div>
+          </div>
+          <div class="panel-lbl" style="margin-bottom:6px">MCP JSON 페이로드 미리보기</div>
+          <div class="payload-box" id="readPayload"></div>
+          <div id="readStatus" class="status"></div>
+          <button class="run-btn" id="readBtn" onclick="runRead()">
+            <span>▶</span> 읽기 실행
+          </button>
+        </div>
+        <!-- RIGHT: 결과 -->
+        <div>
+          <div class="panel-lbl">응답 결과</div>
+          <div class="result-box" id="readResult">
+            <div class="result-empty"><span>📋</span>읽기 실행 후 데이터가 표로 표시됩니다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: WRITE ── -->
+    <div id="tab-write" class="tab-panel">
+      <div class="split">
+        <!-- LEFT: 요청 -->
+        <div>
+          <div class="panel-lbl">요청 구성</div>
+          <div class="inp-g">
+            <label>범위 (Range)</label>
+            <input id="writeRange" value="A2:C2" oninput="updateWriteGrid()">
+          </div>
+          <div class="grid-ctrl">
+            <span>그리드 크기:</span>
+            <button onclick="adjustGrid(-1,0)">행 -</button>
+            <button onclick="adjustGrid(1,0)">행 +</button>
+            <button onclick="adjustGrid(0,-1)">열 -</button>
+            <button onclick="adjustGrid(0,1)">열 +</button>
+            <button onclick="loadWriteColumns()" style="margin-left:auto;background:#EEF2FF;border-color:#C7D2FE;color:#4338CA">📋 컬럼 불러오기</button>
+          </div>
+          <div id="writeColStatus" class="status" style="margin-bottom:8px"></div>
+          <div id="writeGrid"></div>
+          <div class="panel-lbl" style="margin-bottom:6px">MCP JSON 페이로드 미리보기</div>
+          <div class="payload-box" id="writePayload"></div>
+          <div id="writeStatus" class="status"></div>
+          <button class="run-btn" id="writeBtn" onclick="runWrite()">
+            <span>▶</span> 쓰기 실행
+          </button>
+        </div>
+        <!-- RIGHT: 결과 -->
+        <div>
+          <div class="panel-lbl">응답 결과</div>
+          <div class="result-box" id="writeResult">
+            <div class="result-empty"><span>✏️</span>쓰기 실행 후 결과 메시지가 표시됩니다</div>
+          </div>
+          <div class="flow-log" id="writeLog" style="margin-top:14px;display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: EDIT ── -->
+    <div id="tab-edit" class="tab-panel">
+      <div class="split">
+        <!-- LEFT: 불러오기 -->
+        <div>
+          <div class="panel-lbl">1단계 — 데이터 불러오기</div>
+          <div class="inp-g">
+            <label>범위 (Range)</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input id="editRange" value="A1:D5" style="flex:1;margin:0">
+              <button onclick="editAll()" style="padding:9px 12px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;color:#475569;flex-shrink:0">전체 불러오기</button>
+            </div>
+          </div>
+          <div id="editStatus" class="status"></div>
+          <button class="run-btn" id="editLoadBtn" onclick="runEditLoad()">
+            <span>📥</span> 불러오기
+          </button>
+        </div>
+        <!-- RIGHT: 수정 & 저장 -->
+        <div>
+          <div class="panel-lbl">2단계 — 수정 후 저장</div>
+          <div id="editGrid" class="grid-wrap" style="margin-bottom:12px">
+            <div class="result-empty" style="min-height:120px"><span>📋</span>불러오기 후 셀을 수정하세요</div>
+          </div>
+          <button class="run-btn" id="editSaveBtn" onclick="runEditSave()" disabled>
+            <span>💾</span> 저장
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SIMULATION ── -->
+    <div id="tab-sim" class="tab-panel">
+      <div class="panel-lbl" style="margin-bottom:12px">상황 예시</div>
+      <div class="scenario-bar">
+        <button class="scenario-pill active" onclick="runSim(0,this)">📂 "A1:D5 읽어줘"</button>
+        <button class="scenario-pill" onclick="runSim(1,this)">📋 "할일 목록 써줘"</button>
+        <button class="scenario-pill" onclick="runSim(2,this)">📈 "매출 데이터 분석해줘"</button>
+      </div>
+      <div class="chat-log" id="chatLog">
+        <div class="result-empty" style="padding-top:80px"><span>💬</span>시나리오를 선택하면 Claude가 MCP 도구를 사용하는 과정이 재생됩니다</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECURITY ═══════════════════ -->
+<section id="security">
+  <h2 class="sec-title"><span>🔒</span> 보안 주의사항</h2>
+  <table class="sec-tbl">
+    <thead>
+      <tr><th>항목</th><th>주의할 점</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>웹 앱 URL + MCP_SECRET</td>
+        <td>URL 유출만으로는 접근이 차단되도록 <code>MCP_SECRET</code>으로 이중 보호하세요. 두 값 모두 <strong>환경변수</strong>(<code>claude_desktop_config.json</code>의 <code>env</code>)로만 관리하고 소스·config 파일에 기록하지 마세요.</td>
+      </tr>
+      <tr>
+        <td>로그 노출</td>
+        <td>서버 시작 시 URL을 그대로 출력하면 로그에 secret이 남습니다. deploy ID 부분을 <code>[REDACTED]</code>로 마스킹해 출력하세요.</td>
+      </tr>
+      <tr>
+        <td>액세스 권한</td>
+        <td>GAS 배포 시 "본인만"으로 설정하면 외부 호출이 불가합니다. 외부 서버나 Claude에서 호출하려면 "모든 사용자"가 필요합니다.</td>
+      </tr>
+      <tr>
+        <td>Spreadsheets ID</td>
+        <td>민감한 데이터를 담은 시트는 공유 설정을 별도로 제한하세요.</td>
+      </tr>
+      <tr>
+        <td>입력 검증</td>
+        <td>위 Code.gs에 <code>ALLOWED_IDS</code> 스크립트 속성 기반 화이트리스트가 구현되어 있습니다. 속성을 등록하면 허가된 시트 외 접근이 자동으로 차단됩니다.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════ SUMMARY ═══════════════════ -->
+<section id="summary">
+  <h2 class="sec-title">핵심 정리</h2>
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="si">🔑</div>
+      <div class="st">API 키 불필요</div>
+      <div class="sd">GAS 웹 앱 URL 하나로 Google Spreadsheets 연결</div>
+    </div>
+    <div class="sum-card">
+      <div class="si">⚡</div>
+      <div class="st">2개 핸들러만</div>
+      <div class="sd">ListTools + CallTool — Claude가 도구를 자동 인식</div>
+    </div>
+    <div class="sum-card">
+      <div class="si">🗣️</div>
+      <div class="st">자연어 제어</div>
+      <div class="sd">"A1:D5 읽어줘" 한 문장으로 스프레드시트 조작</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+</div><!-- /page-wrap -->
+
+<script>
+// ── 초기화 ──────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  hljs.highlightAll();
+  initGrid(1, 3);
+  updateReadPayload();
+  updateWritePayload();
+});
+
+// ── 코드 복사 ──────────────────────────────────────
+function copyCode(btn) {
+  const code = btn.closest(".code-wrap").querySelector("code").innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = "✓ 복사됨";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "복사"; btn.classList.remove("copied"); }, 1800);
+  });
+}
+
+// ── 탭 전환 ──────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".dtab").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-" + id).classList.add("active");
+  btn.classList.add("active");
+  if (id === "write") loadWriteColumns();
+}
+
+// ── 공통: 설정값 ──────────────────────────────────────
+function cfg() {
+  return {
+    url: document.getElementById("cfgUrl").value.trim(),
+    sheetId: document.getElementById("cfgSheetId").value.trim(),
+  };
+}
+
+// ── HTML 이스케이프 ──────────────────────────────────────
+function esc(s) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// ── JSON 컬러링 ───────────────────────────────────────
+function colorJson(obj) {
+  return JSON.stringify(obj, null, 2)
+    .replace(/"([^"]+)":/g, '<span class="pk">"$1"</span>:')
+    .replace(/: "([^"]*)"/g, ': <span class="ps">"$1"</span>')
+    .replace(/: (\d+)/g, ': <span class="pm">$1</span>')
+    .replace(/: (true|false|null)/g, ': <span class="pp">$1</span>');
+}
+
+// ── READ PANEL ───────────────────────────────────────
+function updateReadPayload() {
+  const range = document.getElementById("readRange").value || "A:Z";
+  const { sheetId } = cfg();
+  const payload = {
+    method: "tools/call",
+    params: {
+      name: "read_google_sheet",
+      arguments: { spreadsheetId: sheetId || "YOUR_SPREADSHEET_ID", range }
+    }
+  };
+  document.getElementById("readPayload").innerHTML = colorJson(payload);
+}
+document.getElementById("cfgSheetId").addEventListener("input", () => {
+  updateReadPayload(); updateWritePayload();
+});
+document.getElementById("cfgUrl").addEventListener("input", () => {});
+
+async function runRead() {
+  const { url, sheetId } = cfg();
+  const range = document.getElementById("readRange").value || "A:Z";
+  const btn = document.getElementById("readBtn");
+  const statusEl = document.getElementById("readStatus");
+
+  if (!url) return showStatus(statusEl, "error", "GAS 웹 앱 URL을 입력하세요.");
+  if (!sheetId) return showStatus(statusEl, "error", "스프레드시트 ID를 입력하세요.");
+
+  btn.disabled = true; btn.innerHTML = '<span class="typing"><i></i><i></i><i></i></span> 요청 중...';
+  showStatus(statusEl, "loading", "GAS 엔드포인트에 POST 요청 중...");
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      // ponytail: text/plain avoids CORS preflight — GAS ignores Content-Type, parses body as JSON anyway
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        method: "tools/call",
+        params: { name: "read_google_sheet", arguments: { spreadsheetId: sheetId, range } }
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text;
+    if (data.isError) throw new Error(raw);
+    // GAS readGoogleSheet returns "스프레드시트 데이터 (N행):\n[JSON]" — JSON만 추출
+    const jsonStr = raw.includes('\n') ? raw.slice(raw.indexOf('\n') + 1) : raw;
+    const rows = JSON.parse(jsonStr);
+    renderTable(rows);
+    showStatus(statusEl, "ok", `✅ ${rows.length}행 읽기 성공`);
+    btn.classList.add("ok"); btn.innerHTML = "✓ 완료";
+  } catch (e) {
+    showStatus(statusEl, "error", `❌ 오류: ${e.message}`);
+    btn.classList.add("err"); btn.innerHTML = "✗ 실패";
+  } finally {
+    setTimeout(() => {
+      btn.disabled = false; btn.classList.remove("ok","err");
+      btn.innerHTML = '<span>▶</span> 읽기 실행';
+    }, 2500);
+  }
+}
+
+function readAll() {
+  document.getElementById("readRange").value = "A:Z";
+  updateReadPayload();
+  runRead();
+}
+
+function editAll() {
+  document.getElementById('editRange').value = 'A:Z';
+  runEditLoad();
+}
+
+function renderTable(rows) {
+  const el = document.getElementById("readResult");
+  if (!rows || rows.length === 0) { el.innerHTML = '<div class="result-empty"><span>📭</span>데이터 없음</div>'; return; }
+  // trim trailing empty columns
+  const maxCol = rows.reduce((m, row) => {
+    let last = 0;
+    row.forEach((cell, i) => { if (cell !== "" && cell !== null && cell !== undefined) last = i + 1; });
+    return Math.max(m, last);
+  }, 0);
+  rows = rows.map(row => row.slice(0, maxCol));
+  const headers = Array.from({length: maxCol}, (_,i) => String.fromCharCode(65+i));
+  let html = `<table class="result-tbl"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>`;
+  rows.forEach(row => {
+    html += `<tr>${row.map(cell=>`<td>${esc(cell)}</td>`).join("")}</tr>`;
+  });
+  html += "</tbody></table>";
+  el.innerHTML = html;
+}
+
+// ── WRITE PANEL ──────────────────────────────────────
+let gridRows = 1, gridCols = 3; let writeColHeaders = null; let writeStartRow = 2;
+
+function initGrid(r, c) {
+  gridRows = r; gridCols = c;
+  const el = document.getElementById("writeGrid");
+  const cols = Array.from({length:c}, (_,i) => String.fromCharCode(65+i));
+  let html = `<div class="grid-hdr" style="grid-template-columns:repeat(${c},1fr)">${cols.map(h=>`<span>${h}</span>`).join("")}</div>`;
+  if (writeColHeaders) {
+    html += `<div class="grid-col-names" style="grid-template-columns:repeat(${c},1fr)">`;
+    for (let ci=0; ci<c; ci++) html += `<span>${writeColHeaders[ci] ?? ""}</span>`;
+    html += "</div>";
+  }
+  for (let ri=0; ri<r; ri++) {
+    html += `<div class="grid-row" style="grid-template-columns:repeat(${c},1fr)">`;
+    for (let ci=0; ci<c; ci++) html += `<input data-r="${ri}" data-c="${ci}" oninput="updateWritePayload()" placeholder="셀 값">`;
+    html += "</div>";
+  }
+  el.innerHTML = html;
+  updateWritePayload();
+}
+
+function adjustGrid(dr, dc) {
+  initGrid(Math.max(1, gridRows+dr), Math.max(1, gridCols+dc));
+  syncRangeFromGrid();
+}
+
+function syncRangeFromGrid() {
+  const startRow = writeColHeaders ? writeStartRow : 1;
+  const endCol = String.fromCharCode(64+gridCols);
+  document.getElementById("writeRange").value = `A${startRow}:${endCol}${startRow + gridRows - 1}`;
+  updateWritePayload();
+}
+
+async function loadWriteColumns() {
+  const { url, sheetId } = cfg();
+  const statusEl = document.getElementById("writeColStatus");
+  if (!url || !sheetId) return;
+  showStatus(statusEl, "loading", "컬럼 및 빈 행 탐색 중...");
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ method: "tools/call", params: { name: "read_google_sheet", arguments: { spreadsheetId: sheetId, range: "A:Z" } } })
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text;
+    if (data.isError) throw new Error(raw);
+    const jsonStr = raw.includes("\n") ? raw.slice(raw.indexOf("\n") + 1) : raw;
+    const rows = JSON.parse(jsonStr);
+    const firstRow = rows[0] || [];
+    let lastCol = 0;
+    firstRow.forEach((h, i) => { if (h !== "" && h !== null && h !== undefined) lastCol = i + 1; });
+    if (lastCol === 0) { showStatus(statusEl, "error", "A1 행이 비어있습니다"); return; }
+    writeColHeaders = firstRow.slice(0, lastCol);
+    writeStartRow = rows.length + 1;
+    const endColLetter = String.fromCharCode(64 + lastCol);
+    document.getElementById("writeRange").value = `A${writeStartRow}:${endColLetter}${writeStartRow}`;
+    initGrid(1, lastCol);
+    showStatus(statusEl, "ok", `✅ ${lastCol}개 컬럼 | 다음 빈 행: ${writeStartRow}행`);
+  } catch (e) {
+    showStatus(statusEl, "error", `❌ ${e.message}`);
+  }
+}
+
+function updateWriteGrid() {
+  const range = document.getElementById("writeRange").value.toUpperCase();
+  const m = range.match(/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/);
+  if (m) {
+    const rows = parseInt(m[4]) - parseInt(m[2]) + 1;
+    const cols = m[3].charCodeAt(0) - m[1].charCodeAt(0) + 1;
+    if (rows !== gridRows || cols !== gridCols) initGrid(rows, cols);
+  }
+  updateWritePayload();
+}
+
+function getGridValues() {
+  const inputs = document.querySelectorAll("#writeGrid input");
+  const vals = Array.from({length:gridRows}, () => Array(gridCols).fill(""));
+  inputs.forEach(inp => { vals[+inp.dataset.r][+inp.dataset.c] = inp.value; });
+  return vals;
+}
+
+function updateWritePayload() {
+  const range = document.getElementById("writeRange").value || "A1:C3";
+  const { sheetId } = cfg();
+  const payload = {
+    method: "tools/call",
+    params: {
+      name: "write_google_sheet",
+      arguments: { spreadsheetId: sheetId || "YOUR_SPREADSHEET_ID", range, values: getGridValues() }
+    }
+  };
+  document.getElementById("writePayload").innerHTML = colorJson(payload);
+}
+
+async function runWrite() {
+  const { url, sheetId } = cfg();
+  const range = document.getElementById("writeRange").value;
+  const values = getGridValues();
+  const btn = document.getElementById("writeBtn");
+  const statusEl = document.getElementById("writeStatus");
+  const logEl = document.getElementById("writeLog");
+
+  if (!url) return showStatus(statusEl, "error", "GAS 웹 앱 URL을 입력하세요.");
+  if (!sheetId) return showStatus(statusEl, "error", "스프레드시트 ID를 입력하세요.");
+
+  btn.disabled = true; btn.innerHTML = '<span class="typing"><i></i><i></i><i></i></span> 쓰는 중...';
+  showStatus(statusEl, "loading", "GAS 엔드포인트에 POST 요청 중...");
+  logEl.style.display = "block";
+  appendLog(logEl, "req", `POST → ${url.slice(0,60)}...`);
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        method: "tools/call",
+        params: { name: "write_google_sheet", arguments: { spreadsheetId: sheetId, range, values } }
+      })
+    });
+    const data = await res.json();
+    const msg = data.content?.[0]?.text;
+    if (data.isError) throw new Error(msg);
+    showStatus(statusEl, "ok", `✅ ${msg}`);
+    appendLog(logEl, "res", msg);
+    document.getElementById("writeResult").innerHTML = `<div style="padding:24px;text-align:center"><div style="font-size:2.5rem;margin-bottom:10px">✅</div><div style="font-weight:600;color:#065F46">${esc(msg)}</div><div style="color:#94A3B8;font-size:.8rem;margin-top:6px">범위: ${esc(range)}</div></div>`;
+    document.querySelectorAll("#writeGrid input").forEach(inp => { inp.value = ""; });
+    if (writeColHeaders) { writeStartRow += gridRows; syncRangeFromGrid(); } else { updateWritePayload(); }
+    btn.classList.add("ok"); btn.innerHTML = "✓ 저장 완료";
+  } catch (e) {
+    showStatus(statusEl, "error", `❌ 오류: ${e.message}`);
+    appendLog(logEl, "err", e.message);
+    btn.classList.add("err"); btn.innerHTML = "✗ 실패";
+  } finally {
+    setTimeout(() => {
+      btn.disabled = false; btn.classList.remove("ok","err");
+      btn.innerHTML = '<span>▶</span> 쓰기 실행';
+    }, 3000);
+  }
+}
+
+// ── EDIT PANEL ──────────────────────────────────────
+let editRange = '', editRows = 0, editCols = 0;
+
+async function runEditLoad() {
+  const { url, sheetId } = cfg();
+  const range = document.getElementById('editRange').value || 'A1:D5';
+  const btn = document.getElementById('editLoadBtn');
+  const statusEl = document.getElementById('editStatus');
+
+  if (!url) return showStatus(statusEl, 'error', 'GAS 웹 앱 URL을 입력하세요.');
+  if (!sheetId) return showStatus(statusEl, 'error', '스프레드시트 ID를 입력하세요.');
+
+  btn.disabled = true; btn.innerHTML = '<span class="typing"><i></i><i></i><i></i></span> 불러오는 중...';
+  showStatus(statusEl, 'loading', '데이터를 읽어오는 중...');
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ method: 'tools/call', params: { name: 'read_google_sheet', arguments: { spreadsheetId: sheetId, range } } })
+    });
+    const data = await res.json();
+    const raw = data.content?.[0]?.text;
+    if (data.isError) throw new Error(raw);
+    const jsonStr = raw.includes('\n') ? raw.slice(raw.indexOf('\n') + 1) : raw;
+    const rawRows = JSON.parse(jsonStr);
+    const maxCol = rawRows.reduce((m, row) => {
+      let last = 0;
+      row.forEach((cell, i) => { if (cell !== "" && cell !== null && cell !== undefined) last = i + 1; });
+      return Math.max(m, last);
+    }, 0);
+    const rows = rawRows.map(row => row.slice(0, maxCol));
+    editRows = rows.length; editCols = maxCol;
+    const startCol = range.match(/[A-Z]+/)?.[0] || 'A';
+    const startRow = parseInt(range.match(/\d+/)?.[0] || '1');
+    editRange = `${startCol}${startRow}:${String.fromCharCode(startCol.charCodeAt(0) + maxCol - 1)}${startRow + rows.length - 1}`;
+    renderEditGrid(rows);
+    document.getElementById('editSaveBtn').disabled = false;
+    showStatus(statusEl, 'ok', `✅ ${rows.length}행 불러오기 완료 — 수정 후 저장 버튼을 누르세요`);
+    btn.classList.add('ok'); btn.innerHTML = '✓ 완료';
+  } catch (e) {
+    showStatus(statusEl, 'error', `❌ 오류: ${e.message}`);
+    btn.classList.add('err'); btn.innerHTML = '✗ 실패';
+  } finally {
+    setTimeout(() => { btn.disabled = false; btn.classList.remove('ok','err'); btn.innerHTML = '<span>📥</span> 불러오기'; }, 2500);
+  }
+}
+
+function renderEditGrid(rows) {
+  const cols = Array.from({length: editCols}, (_, i) => String.fromCharCode(65 + i));
+  let html = `<div class="grid-hdr" style="grid-template-columns:repeat(${editCols},1fr)">${cols.map(h => `<span>${h}</span>`).join('')}</div>`;
+  for (let ri = 0; ri < editRows; ri++) {
+    html += `<div class="grid-row" style="grid-template-columns:repeat(${editCols},1fr)">`;
+    for (let ci = 0; ci < editCols; ci++) {
+      const val = String(rows[ri]?.[ci] ?? '').replace(/"/g, '&quot;');
+      html += `<input data-er="${ri}" data-ec="${ci}" value="${val}">`;
+    }
+    html += '</div>';
+  }
+  document.getElementById('editGrid').innerHTML = html;
+}
+
+function calcWriteRange(originalRange, rows, cols) {
+  const startCell = originalRange.split(':')[0];           // "A1:D10" → "A1"
+  const startCol = startCell.match(/[A-Z]+/)[0];          // "A"
+  const startRow = parseInt(startCell.match(/\d+/)[0]);   // 1
+  const endCol = String.fromCharCode(startCol.charCodeAt(0) + cols - 1); // "D"
+  return `${startCol}${startRow}:${endCol}${startRow + rows - 1}`;       // "A1:D3"
+}
+
+async function runEditSave() {
+  const { url, sheetId } = cfg();
+  const btn = document.getElementById('editSaveBtn');
+  const statusEl = document.getElementById('editStatus');
+
+  if (!url) return showStatus(statusEl, 'error', 'GAS 웹 앱 URL을 입력하세요.');
+
+  const values = Array.from({length: editRows}, () => Array(editCols).fill(''));
+  document.querySelectorAll('#editGrid input').forEach(inp => { values[+inp.dataset.er][+inp.dataset.ec] = inp.value; });
+  const maxCol = values.reduce((m, row) => {
+    let last = 0;
+    row.forEach((cell, i) => { if (cell !== '') last = i + 1; });
+    return Math.max(m, last);
+  }, 0) || editCols;
+  const trimmedValues = values.map(row => row.slice(0, maxCol));
+
+  btn.disabled = true; btn.innerHTML = '<span class="typing"><i></i><i></i><i></i></span> 저장 중...';
+  showStatus(statusEl, 'loading', 'GAS에 저장 중...');
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ method: 'tools/call', params: { name: 'write_google_sheet', arguments: { spreadsheetId: sheetId, range: calcWriteRange(editRange, editRows, maxCol), values: trimmedValues } } })
+    });
+    const data = await res.json();
+    const msg = data.content?.[0]?.text;
+    if (data.isError) throw new Error(msg);
+    showStatus(statusEl, 'ok', `✅ ${msg}`);
+    btn.classList.add('ok'); btn.innerHTML = '✓ 저장 완료';
+  } catch (e) {
+    showStatus(statusEl, 'error', `❌ 오류: ${e.message}`);
+    btn.classList.add('err'); btn.innerHTML = '✗ 실패';
+  } finally {
+    setTimeout(() => { btn.disabled = false; btn.classList.remove('ok','err'); btn.innerHTML = '<span>💾</span> 저장'; }, 2500);
+  }
+}
+
+function appendLog(el, type, msg) {
+  const now = new Date().toLocaleTimeString("ko",{hour12:false});
+  const cls = type === "req" ? "fl-req" : type === "res" ? "fl-res" : "fl-err";
+  const icon = type === "req" ? "→" : type === "res" ? "←" : "✗";
+  const item = document.createElement("div");
+  item.className = "fl-item";
+  item.innerHTML = `<span class="fl-time">[${now}]</span>`;
+  const span = document.createElement("span");
+  span.className = cls;
+  span.textContent = `${icon} ${msg}`;
+  item.appendChild(span);
+  el.appendChild(item);
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── STATUS ──────────────────────────────────────────
+function showStatus(el, type, msg) {
+  el.className = `status ${type} show`;
+  el.textContent = msg;
+}
+
+// ── CLAUDE SIMULATION ────────────────────────────────
+const scenarios = [
+  {
+    label: "A1:D5 읽기",
+    steps: [
+      { role:"user", text:"스프레드시트의 A1:D5 범위를 읽어줘" },
+      { role:"assistant", text:"네, <code>read_google_sheet</code> 도구로 읽어올게요.", delay:700 },
+      { role:"tool-call", text:'{\n  "name": "read_google_sheet",\n  "arguments": {\n    "spreadsheetId": "1JSeO4xxx...",\n    "range": "A1:D5"\n  }\n}', delay:900 },
+      { role:"tool-result", text:'{\n  "content": [{\n    "type": "text",\n    "text": "[[\'이름\',\'부서\',\'입사일\',\'점수\'],[\'김지수\',\'개발팀\',\'2023-01-15\',98],[\'이민준\',\'디자인\',\'2022-08-30\',85],[\'박서연\',\'기획\',\'2024-03-10\',91],[\'최현우\',\'개발팀\',\'2021-11-20\',76]]"\n  }]\n}', delay:1100 },
+      { role:"assistant", text:"A1:D5 데이터를 가져왔습니다!\n\n| 이름 | 부서 | 입사일 | 점수 |\n|------|------|--------|------|\n| 김지수 | 개발팀 | 2023-01-15 | 98 |\n| 이민준 | 디자인 | 2022-08-30 | 85 |\n| 박서연 | 기획 | 2024-03-10 | 91 |\n| 최현우 | 개발팀 | 2021-11-20 | 76 |", delay:800 },
+    ]
+  },
+  {
+    label: "할일 목록 쓰기",
+    steps: [
+      { role:"user", text:"A1:B3에 오늘 할일 목록을 써줘. ['회의록 정리','완료'], ['코드 리뷰','진행중'], ['배포','예정'] 이렇게" },
+      { role:"assistant", text:"알겠습니다. <code>write_google_sheet</code>로 A1:B3에 작성할게요.", delay:700 },
+      { role:"tool-call", text:'{\n  "name": "write_google_sheet",\n  "arguments": {\n    "spreadsheetId": "1JSeO4xxx...",\n    "range": "A1:B3",\n    "values": [\n      ["회의록 정리", "완료"],\n      ["코드 리뷰", "진행중"],\n      ["배포", "예정"]\n    ]\n  }\n}', delay:900 },
+      { role:"tool-result", text:'{\n  "content": [{\n    "type": "text",\n    "text": "A1:B3 에 저장 완료"\n  }]\n}', delay:1000 },
+      { role:"assistant", text:"✅ A1:B3에 3개의 할일을 저장했습니다!\n\n- A열: 업무명, B열: 상태로 기입했어요. 내용을 수정하거나 추가 항목이 있으면 말씀해 주세요.", delay:700 },
+    ]
+  },
+  {
+    label: "데이터 분석",
+    steps: [
+      { role:"user", text:"시트에서 매출 데이터 읽어서 총합이랑 평균 알려줘" },
+      { role:"assistant", text:"먼저 데이터를 읽어올게요.", delay:600 },
+      { role:"tool-call", text:'{\n  "name": "read_google_sheet",\n  "arguments": {\n    "spreadsheetId": "1JSeO4xxx...",\n    "range": "A:B"\n  }\n}', delay:900 },
+      { role:"tool-result", text:'{\n  "content": [{\n    "type": "text",\n    "text": "[[\'월\',\'매출\'],[\'1월\',1200000],[\'2월\',980000],[\'3월\',1540000],[\'4월\',1320000],[\'5월\',1680000]]"\n  }]\n}', delay:1200 },
+      { role:"assistant", text:"📊 **매출 분석 결과**\n\n| 월 | 매출 |\n|----|------|\n| 1월 | 1,200,000원 |\n| 2월 | 980,000원 |\n| 3월 | 1,540,000원 |\n| 4월 | 1,320,000원 |\n| 5월 | 1,680,000원 |\n\n- **총합**: 6,720,000원\n- **평균**: 1,344,000원\n- **최고**: 5월 (1,680,000원)\n- **최저**: 2월 (980,000원)", delay:800 },
+    ]
+  }
+];
+
+let simRunning = false;
+
+async function runSim(idx, btn) {
+  if (simRunning) return;
+  simRunning = true;
+  document.querySelectorAll(".scenario-pill").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  const log = document.getElementById("chatLog");
+  log.innerHTML = "";
+  const steps = scenarios[idx].steps;
+
+  for (const step of steps) {
+    await sleep(step.delay || 600);
+    appendChatMsg(log, step.role, step.text);
+    log.scrollTop = log.scrollHeight;
+  }
+  simRunning = false;
+}
+
+function appendChatMsg(log, role, text) {
+  const div = document.createElement("div");
+  if (role === "user") {
+    div.className = "chat-msg user";
+    div.innerHTML = `<div class="av u">🧑</div><div class="bubble">${text}</div>`;
+  } else if (role === "assistant") {
+    div.className = "chat-msg assistant";
+    div.innerHTML = `<div class="av c">AI</div><div class="bubble">${text.replace(/\n/g,"<br>")}</div>`;
+  } else if (role === "tool-call") {
+    div.className = "chat-msg tool";
+    div.innerHTML = `<div class="av t">🔧</div><div class="bubble"><div class="tool-tag call">▶ TOOL CALL</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all">${text}</pre></div>`;
+  } else if (role === "tool-result") {
+    div.className = "chat-msg tool";
+    div.innerHTML = `<div class="av t">📦</div><div class="bubble"><div class="tool-tag result">← TOOL RESULT</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all">${text}</pre></div>`;
+  }
+  log.appendChild(div);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// 자동으로 첫 시나리오 실행
+setTimeout(() => runSim(0, document.querySelector(".scenario-pill")), 600);
+
+// ── 스크롤 스파이 ─────────────────────────────────────
+const _targets = ["arch","steps","step1","step2","step3","step4","demo","security","summary"];
+const _links = {};
+document.querySelectorAll(".slink").forEach(a => { _links[a.getAttribute("href").slice(1)] = a; });
+const _obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { Object.values(_links).forEach(a => a.classList.remove("active")); if (_links[e.target.id]) _links[e.target.id].classList.add("active"); } });
+}, { rootMargin: "-20% 0px -70% 0px" });
+_targets.forEach(id => { const el = document.getElementById(id); if (el) _obs.observe(el); });
+</script>
+</body>
+</html>
