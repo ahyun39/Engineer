@@ -5,7 +5,7 @@
 
 # 대용량 데이터 파일
 Projects/project_Recommendation/data/store_data.csv
-ML/RAG/llm-application/chroma/
+AI/RAG/llm-application/chroma/
 Projects/project_marketing_analysis
 Projects/project_finance/data
 Projects/project_finance/index
