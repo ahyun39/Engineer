@@ -112,7 +112,9 @@ if __name__ == "__main__":
     import json
     import glob
 
-    latest = sorted(glob.glob("data/processed/*.jsonl"))[-1]
+    from .transformer import PROCESSED_DIR
+
+    latest = sorted(glob.glob(f"{PROCESSED_DIR}/*.jsonl"))[-1]
     logger.info("적재 파일: %s", latest)
 
     records = [json.loads(line) for line in open(latest, encoding="utf-8")]

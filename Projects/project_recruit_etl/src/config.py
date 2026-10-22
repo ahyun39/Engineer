@@ -24,6 +24,11 @@ DATA_RETENTION_DAYS:  int = int(os.getenv("DATA_RETENTION_DAYS",  "7"))
 ES_HOST:  str = os.getenv("ES_HOST",  "http://localhost:9200")
 ES_INDEX: str = os.getenv("ES_INDEX", "saramin-jobs")
 
-# Scraper (크롤러 — 1회성 검증용)
+# Scraper (크롤러 — 메인 Extract 경로)
 SARAMIN_BASE_URL: str = os.getenv("SARAMIN_BASE_URL", "https://www.saramin.co.kr")
 SCRAPE_PAGES:     int = int(os.getenv("SCRAPE_PAGES", "10"))
+
+# 사람인 공식 API (api_extractor.py — 대안 Extract 경로, API 키 있을 때만 사용)
+SARAMIN_API_KEY:   str = os.getenv("SARAMIN_API_KEY",   "")
+SARAMIN_API_COUNT: int = int(os.getenv("SARAMIN_API_COUNT", "110"))   # 요청당 최대 110건
+SARAMIN_API_PAGES: int = int(os.getenv("SARAMIN_API_PAGES", "1"))

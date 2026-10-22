@@ -3,7 +3,7 @@
 saramin-jobs-raw 토픽을 구독해 메시지를 누적하고,
 마지막 메시지 수신 후 FLUSH_SECONDS 초가 지나면 배치를 Transform → Save한다.
 
-실행: python etl_worker.py
+실행: python -m src.etl_worker
 종료: Ctrl+C (진행 중인 배치가 있으면 처리 후 종료)
 """
 
@@ -79,7 +79,7 @@ def run():
 
             # 배치가 있고 FLUSH_SECONDS 이상 신규 메시지가 없으면 처리
             if batch and last_received_at:
-                idle_seconds = (datetime.now() - last_received_at).seconds
+                idle_seconds = (datetime.now() - last_received_at).total_seconds()
                 if idle_seconds >= FLUSH_SECONDS:
                     process_batch(batch)
                     consumer.commit()        # 배치 처리 완료 후 offset 커밋

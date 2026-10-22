@@ -39,6 +39,7 @@ def fetch_jobs_page(page):
         LIST_URL,
         params={"page": page, "isAjaxRequest": "y"},
         headers=HEADERS,
+        timeout=10,
     )
     response.raise_for_status()
 
@@ -133,9 +134,11 @@ def scrape(pages=None):
                 logger.warning("파싱 실패: %s", e)
                 results.append(build_error_record(item, e))
 
-    df = pd.DataFrame(results)
-    df = df.drop_duplicates(subset=["job_id"])
-    return df
+    if not results:
+        logger.warning("수집된 공고 없음")
+        return pd.DataFrame()
+
+    return pd.DataFrame(results).drop_duplicates(subset=["job_id"])
 
 
 def save_raw(df, out_dir=RAW_DIR):

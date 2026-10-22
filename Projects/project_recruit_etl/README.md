@@ -34,19 +34,29 @@
 
 ```
 project_recruit_etl/
-├── scraper.py          # Extract: 사람인 크롤링 모듈
-├── transformer.py      # Transform: 정제·파생 컬럼 생성 모듈
-├── loader.py           # Load: Elasticsearch 적재 모듈
-├── kafka_producer.py   # cron 진입점 — scrape() 후 Kafka 토픽에 publish
-├── etl_worker.py       # Kafka Consumer — 배치 누적 후 transform → load
-├── docker-compose.yml  # Kafka / Elasticsearch / Kibana 서비스 정의
+├── src/
+│   ├── scraper.py        # Extract(메인): 사람인 크롤링 모듈
+│   ├── api_extractor.py  # Extract(대안): 사람인 공식 API 기반, API 키 있을 때 선택적 사용
+│   ├── transformer.py    # Transform: 정제·파생 컬럼 생성 모듈
+│   ├── loader.py         # Load: Elasticsearch 적재 모듈
+│   ├── kafka_producer.py # cron 진입점 — scrape() 후 Kafka 토픽에 publish
+│   ├── etl_worker.py     # Kafka Consumer — 배치 누적 후 transform → load
+│   ├── config.py         # .env 기반 설정
+│   └── log_config.py     # 중앙 로깅 설정
+├── tests/               # transformer 단위 테스트 (pytest)
+├── docker-compose.yml   # Kafka / Elasticsearch / Kibana 서비스 정의
+├── requirements.txt
+├── .env.example
 ├── data/
-│   ├── raw/            # jobs_raw_YYYYMMDD_HHMMSS.jsonl
-│   └── processed/      # jobs_processed_YYYYMMDD_HHMMSS.jsonl
-├── images/             # README 및 record.ipynb 스크린샷
-├── logs/               # cron 실행 로그
-└── record.ipynb        # 개발 과정 기록 노트북
+│   ├── raw/             # jobs_raw_YYYYMMDD_HHMMSS.jsonl
+│   └── processed/       # jobs_processed_YYYYMMDD_HHMMSS.jsonl
+├── images/              # README 및 record.ipynb 스크린샷
+├── logs/                # cron 실행 로그
+└── docs/
+    └── record.ipynb     # 개발 과정 기록 노트북
 ```
+
+**Extract가 두 경로인 이유:** 메인 파이프라인은 크롤러(`scraper.py`) 기반으로 e2e 검증되어 있습니다. `api_extractor.py`는 사람인 공식 API 키가 있을 때 크롤링 대신 사용할 수 있는 대안 경로로, 반환 스키마를 크롤러와 동일하게 맞춰 Transform 단계가 두 경로 모두에서 동일하게 동작합니다.
 
 ## 실행 방법
 
@@ -54,7 +64,10 @@ project_recruit_etl/
 
 ```bash
 # Python 의존성 설치
-pip install requests beautifulsoup4 pandas kafka-python-ng elasticsearch
+pip install -r requirements.txt
+
+# 환경변수 설정
+cp .env.example .env
 
 # Docker로 인프라 실행
 docker compose up -d

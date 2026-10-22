@@ -1,0 +1,10 @@
+.env
+__pycache__/
+.pytest_cache/
+logs/
+data/
+.DS_Store
+
+# 개인 공부 파일 — 포트폴리오 비공개
+docs/*
+!docs/record.ipynb
