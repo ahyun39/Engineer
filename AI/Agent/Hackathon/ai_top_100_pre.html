@@ -22,7 +22,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:68px}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 Suite,Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all}
-article{max-width:1240px;margin:0 auto;padding:40px clamp(16px,3vw,32px) 72px}
+article{max-width:1000px;margin:0 auto;padding:40px clamp(16px,3vw,32px) 72px}
 h1{font-size:clamp(30px,6vw,52px);line-height:1.22;letter-spacing:-.02em;font-weight:800;margin:0 0 18px;color:#fff}
 h1 span{display:block;font-size:.5em;font-weight:600;line-height:1.4;letter-spacing:-.01em;margin-top:14px;color:#d8d8d8}
 h2{font-size:clamp(23px,4vw,30px);line-height:1.35;letter-spacing:-.01em;font-weight:800;margin:72px 0 18px}
@@ -35,7 +35,7 @@ p{margin:0 0 14px}
 .hero::before,.hero::after,.dark-end::before{content:"";position:absolute;border-radius:50%;filter:blur(64px);pointer-events:none}
 .hero::before{width:420px;height:420px;right:-120px;top:-140px;background:radial-gradient(circle,#b7ff4a 0,#20e3b2 45%,transparent 72%);opacity:.5}
 .hero::after{width:360px;height:360px;left:-140px;bottom:-190px;background:radial-gradient(circle,#ff4fa3 0,#7a5cff 50%,transparent 74%);opacity:.45}
-.hero-in{position:relative;z-index:1;max-width:1176px;margin:0 auto}
+.hero-in{position:relative;z-index:1;max-width:936px;margin:0 auto}
 .eyebrow{display:inline-block;font-size:13px;font-weight:700;padding:4px 14px;border:1px solid #555;border-radius:999px;color:#e8e8e8;margin-bottom:20px}
 .sub{color:#b5b5b5;font-size:15px;margin:0}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:32px}
@@ -47,7 +47,7 @@ p{margin:0 0 14px}
 @keyframes tick{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion: reduce){.ticker div{animation:none}html{scroll-behavior:auto}}
 .callout{background:var(--soft);padding:16px 20px;border-radius:16px;font-size:15px;margin:20px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px auto;max-width:800px}
 nav.toc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:24px 0}
 nav.toc a{font-size:15px;font-weight:600;color:var(--fg);text-decoration:none;padding:3px 8px;margin-left:-8px;border-radius:6px;transition:background-color .15s}
 nav.toc a:hover,nav.toc a:focus-visible{background:var(--soft)}
