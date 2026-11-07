@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI TOP 100 예선 후기</title>
+<style>
+:root{
+  --bg:#ffffff; --card:#ffffff; --fg:#222222; --muted:#666666; --line:#e0e0e0; --soft:#f5f5f5;
+  --acc:#111111; --acc-bg:#e4ffc4; --on-acc:#ffffff; --bad:#c2255c; --bad-bg:#fff0f6; --good:#087f5b; --good-bg:#e9fbf3; --warn:#b45309;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101010; --card:#1a1a1a; --fg:#f0f0f0; --muted:#a3a3a3; --line:#333333; --soft:#242424;
+    --acc:#c6ff5e; --acc-bg:#2c3a12; --on-acc:#111111; --bad:#ff7aa8; --bad-bg:#33161f; --good:#4ee2a8; --good-bg:#10291f; --warn:#fbbf24;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101010; --card:#1a1a1a; --fg:#f0f0f0; --muted:#a3a3a3; --line:#333333; --soft:#242424;
+  --acc:#c6ff5e; --acc-bg:#2c3a12; --on-acc:#111111; --bad:#ff7aa8; --bad-bg:#33161f; --good:#4ee2a8; --good-bg:#10291f; --warn:#fbbf24;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 Suite,Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all}
+article{max-width:1240px;margin:0 auto;padding:40px clamp(16px,3vw,32px) 72px}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.22;letter-spacing:-.02em;font-weight:800;margin:0 0 18px;color:#fff}
+h1 span{display:block;font-size:.5em;font-weight:600;line-height:1.4;letter-spacing:-.01em;margin-top:14px;color:#d8d8d8}
+h2{font-size:clamp(23px,4vw,30px);line-height:1.35;letter-spacing:-.01em;font-weight:800;margin:72px 0 18px}
+h3{font-size:19px;font-weight:800;margin:36px 0 10px}
+p{margin:0 0 14px}
+.topbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;height:52px;padding:0 20px;background:#101010;color:#fff;font-size:13px}
+.topbar b{font-size:15px;font-weight:800;letter-spacing:.01em}
+.topbar a{color:#d8d8d8;text-decoration:none}
+.hero{position:relative;overflow:hidden;background:#101010;color:#fff;padding:clamp(56px,10vw,104px) 16px clamp(40px,7vw,64px)}
+.hero::before,.hero::after,.dark-end::before{content:"";position:absolute;border-radius:50%;filter:blur(64px);pointer-events:none}
+.hero::before{width:420px;height:420px;right:-120px;top:-140px;background:radial-gradient(circle,#b7ff4a 0,#20e3b2 45%,transparent 72%);opacity:.5}
+.hero::after{width:360px;height:360px;left:-140px;bottom:-190px;background:radial-gradient(circle,#ff4fa3 0,#7a5cff 50%,transparent 74%);opacity:.45}
+.hero-in{position:relative;z-index:1;max-width:1176px;margin:0 auto}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;padding:4px 14px;border:1px solid #555;border-radius:999px;color:#e8e8e8;margin-bottom:20px}
+.sub{color:#b5b5b5;font-size:15px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:32px}
+.stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px}
+.stat b{display:block;font-size:26px;font-weight:800;line-height:1.3;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:#c4c4c4}
+.ticker{overflow:hidden;background:#000;color:#c6ff5e;font-size:13px;font-weight:600;white-space:nowrap;padding:8px 0}
+.ticker div{display:inline-block;animation:tick 34s linear infinite}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.ticker div{animation:none}html{scroll-behavior:auto}}
+.callout{background:var(--soft);padding:16px 20px;border-radius:16px;font-size:15px;margin:20px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px 0}
+nav.toc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:24px 0}
+nav.toc a{font-size:15px;font-weight:600;color:var(--fg);text-decoration:none;padding:3px 8px;margin-left:-8px;border-radius:6px;transition:background-color .15s}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--soft)}
+nav.toc a[href="#render"],nav.toc a[href="#chat"],nav.toc a[href="#status"],nav.toc a[href="#compare"],nav.toc a[href="#graph"]{font-weight:400;color:var(--muted);margin-left:12px}
+.dark-end{position:relative;overflow:hidden;background:#101010;color:#fff;border-radius:24px;padding:32px 28px;margin:24px 0 0}
+.dark-end::before{width:300px;height:300px;right:-100px;bottom:-140px;background:radial-gradient(circle,#ffd84a 0,#ff4fa3 50%,transparent 74%);opacity:.5}
+.dark-end p{position:relative;z-index:1;margin:0 0 12px}
+.dark-end strong{display:block;position:relative;z-index:1;font-size:clamp(19px,3.4vw,24px);font-weight:800;line-height:1.5}
+footer{background:#101010;color:#a3a3a3;font-size:14px;padding:22px 16px;text-align:center}
+ul{padding-left:22px;margin:0 0 14px} li{margin:4px 0}
+code{background:var(--soft);padding:1px 6px;border-radius:5px;font-size:14px}
+button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 16px;border-radius:999px}
+button:hover{border-color:var(--acc)}
+button.primary{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--fg);font-family:inherit}
+.n rect{fill:var(--soft);stroke:var(--line);stroke-width:1.2;transition:all .25s}
+.n{cursor:pointer}
+.n:hover rect{stroke:var(--acc)}
+.n.on rect{fill:var(--acc-bg);stroke:var(--acc);stroke-width:2}
+.n .s{fill:var(--muted);font-size:12px}
+.e{stroke:var(--line);stroke-width:2;fill:none;transition:all .25s}
+.e.on{stroke:var(--acc);stroke-width:3;stroke-dasharray:8 6;animation:flow .6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-14}}
+@media (prefers-reduced-motion: reduce){.e.on{animation:none}}
+.panel{min-height:86px;background:var(--soft);border-radius:14px;padding:12px 14px;font-size:15px;margin-top:12px}
+.panel b{display:block;margin-bottom:2px}
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.tl{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card);font-size:14px;position:relative}
+.tl .t{font-size:12px;color:var(--muted)}
+.tl b{display:block}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px}
+.box.bad{background:var(--bad-bg);border-color:var(--bad)} .box.good{background:var(--good-bg);border-color:var(--good)}
+.box h4{margin:0 0 6px;font-size:15px}
+label{font-size:14px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.bars{display:grid;gap:10px;margin-top:14px}
+.bar{display:grid;grid-template-columns:96px 1fr 110px;gap:10px;align-items:center;font-size:14px}
+.track{background:var(--soft);border-radius:6px;height:22px;overflow:hidden}
+.fill{height:100%;border-radius:6px;transition:width .35s}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.big{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.stack{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--line)}
+.stack div{transition:flex .4s, opacity .4s;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+details{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0;background:var(--card)}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{margin-bottom:8px}
+.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;margin:6px 0}
+.loop span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.loop .arr{background:none;border:none;color:var(--muted);padding:0}
+.note{font-size:13px;color:var(--muted)}
+:root{--k-bg:#b2c7d9;--k-other:#ffffff;--k-other-fg:#1d2127;--k-chip:rgba(0,0,0,.18);--k-chip-fg:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--k-bg:#2a3540;--k-other:#3b4450;--k-other-fg:#e7e9ec;--k-chip:rgba(255,255,255,.14)}}
+:root[data-theme="dark"]{--k-bg:#2a3540;--k-other:#3b4450;--k-other-fg:#e7e9ec;--k-chip:rgba(255,255,255,.14)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chips button{font-size:13px;padding:4px 10px}
+.phone{background:var(--k-bg);border-radius:14px;overflow:hidden}
+.phone-top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:14px;font-weight:600;color:var(--k-other-fg);background:rgba(255,255,255,.28)}
+.phone-top button{font-size:12px;padding:3px 10px;font-weight:400}
+.chatlog{height:430px;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.m{display:flex;gap:7px;max-width:88%;animation:pop .22s ease-out}
+.m.me{align-self:flex-end;flex-direction:row-reverse}
+.avatar{flex:none;width:34px;height:34px;border-radius:13px;background:#7f9db4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+.who{font-size:12px;color:var(--k-other-fg);opacity:.85;margin-bottom:2px}
+.bubble{padding:7px 11px;border-radius:12px;font-size:14px;line-height:1.55;background:var(--k-other);color:var(--k-other-fg);white-space:pre-wrap;word-break:break-word}
+.m.me .bubble{background:#fee500;color:#1d2127}
+.day{align-self:center;font-size:12px;color:var(--k-chip-fg);background:var(--k-chip);padding:2px 12px;border-radius:999px;animation:pop .22s ease-out}
+.sys{align-self:center;max-width:92%;text-align:center;font-size:13px;line-height:1.55;color:var(--k-chip-fg);background:var(--k-chip);padding:6px 12px;border-radius:10px;white-space:pre-line;animation:pop .22s ease-out}
+.typing{display:inline-flex;gap:4px;padding:11px 12px}
+.typing i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.35;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){.m,.day,.sys{animation:none}.typing i{animation:none}}
+.chartwrap{position:relative}
+.gridl{stroke:var(--line);stroke-width:1}
+.axis{fill:var(--muted);font-size:12px}
+.sl{fill:none;stroke:var(--muted);stroke-width:1.2;opacity:.35;cursor:pointer}
+.sl.on{stroke:var(--acc);stroke-width:2.5;opacity:1}
+.dot{fill:var(--acc);stroke:var(--card);stroke-width:2}
+.hit{fill:transparent;cursor:pointer}
+#ctip{position:absolute;display:none;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.14);white-space:nowrap;z-index:2}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.t td.r,table.t th.r{text-align:right;font-variant-numeric:tabular-nums}
+:root{--x:#d97706;--c1:#2563eb;--c2:#0891b2;--c3:#7c3aed;--c4:#db2777;--c5:#16a34a;--c6:#dc2626;--c7:#475569;--c8:#ca8a04}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--x:#f59e0b;--c1:#7aa2ff;--c2:#22d3ee;--c3:#a78bfa;--c4:#f472b6;--c5:#4ade80;--c6:#f87171;--c7:#94a3b8;--c8:#facc15}}
+:root[data-theme="dark"]{--x:#f59e0b;--c1:#7aa2ff;--c2:#22d3ee;--c3:#a78bfa;--c4:#f472b6;--c5:#4ade80;--c6:#f87171;--c7:#94a3b8;--c8:#facc15}
+.wide-scroll{overflow-x:auto}
+.wide-scroll svg{min-width:760px}
+.ar{fill:var(--soft);stroke:var(--line)}
+.ar.bad{fill:var(--bad-bg);stroke:var(--bad)}
+.ar.good{fill:var(--good-bg);stroke:var(--good)}
+.ar.acc{fill:var(--acc-bg);stroke:var(--acc)}
+.ms{fill:var(--muted)}
+.tbad{fill:var(--bad);font-weight:600}
+.tgood{fill:var(--good);font-weight:600}
+.al{stroke:var(--muted);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.al.bad{stroke:var(--bad);marker-end:url(#ahb)}
+.al.good{stroke:var(--good);marker-end:url(#ahg)}
+.al.dash{stroke-dasharray:5 4}
+.cmp[hidden]{display:none}
+td.b{color:var(--bad)} td.g{color:var(--good)}
+#kgraph .ge{stroke:var(--line);stroke-width:1}
+#kgraph .gx{stroke:var(--x);stroke-width:1.4;fill:none;stroke-dasharray:4 3;opacity:.75}
+#kgraph .gn{cursor:pointer}
+#kgraph text{pointer-events:none}
+#kgraph.dim .gn:not(.on),#kgraph.dim .ge:not(.on),#kgraph.dim .gx:not(.on),#kgraph.dim .gl:not(.on){opacity:.12}
+#kgraph .gx.on{opacity:1;stroke-width:2.2}
+#ktip{position:fixed;z-index:20;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.55;max-width:280px;display:none;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+pre{background:var(--soft);border-radius:12px;padding:14px;overflow-x:auto;margin:0;font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+<header class="topbar"><b>예선 참가 후기</b><a href="#chat">카카오톡 인터뷰 ↓</a></header>
+<section class="hero"><div class="hero-in">
+<span class="eyebrow">[2026] AI TOP 100 예선 후기 (2026.10.31 진행)</span>
+<h1>AI TOP 100<span>예선에서 CS 에이전트를 만들며 느낀 것들을 정리해봤습니다.</span></h1>
+<p class="sub">제한시간 5시간 | 카카오톡 챗봇 + FastAPI + LLM 도구 호출 에이전트</p>
+<div class="stats">
+<div class="stat"><b>10명</b><span>대화한 관계자</span></div>
+<div class="stat"><b>283회</b><span>인터뷰 질문</span></div>
+<div class="stat"><b>약 58%</b><span>평균 발굴률</span></div>
+<div class="stat"><b>40개</b><span>연결한 액션 API</span></div>
+</div>
+</div></section>
+<div class="ticker" aria-hidden="true"><div>관계자 인터뷰 · 지식 발굴 · 도구 호출 에이전트 · 교차 검증 · 로컬 TC · 지식 그래프 · 관계자 인터뷰 · 지식 발굴 · 도구 호출 에이전트 · 교차 검증 · 로컬 TC · 지식 그래프 · 관계자 인터뷰 · 지식 발굴 · 도구 호출 에이전트 · 교차 검증 · 로컬 TC · 지식 그래프 · 관계자 인터뷰 · 지식 발굴 · 도구 호출 에이전트 · 교차 검증 · 로컬 TC · 지식 그래프 · </div></div>
+<article>
+
+<div class="callout">예선전에 참여하면서 AI와 함께 작업한 내용과 작업하면서 겪은 시행착오를 정리해봤습니다.</div>
+
+<nav class="toc">
+<a href="#about">1. AI TOP 100 참가 개요</a><a href="#arch">2. 에이전트 시스템 아키텍처</a><a href="#render">2.1. Render 서버 배포</a><a href="#day">3. 대회 진행 과정</a><a href="#chat">3.1. 마을 관계자 인터뷰</a><a href="#status">3.2. 지식 발굴률 변화</a><a href="#good">4. 잘된 점</a><a href="#bad">5. 문제점 및 원인 분석</a><a href="#calc">6. 입력량 비교</a><a href="#knowledge">7. 지식 구조 개선</a><a href="#compare">7.1. 기존 구조와 개선 구조 비교</a><a href="#graph">7.2. 카테고리별 지식 그래프</a><a href="#retry">8. 회고 및 향후 개선 방향</a><a href="#closing">9. 마치며</a>
+</nav>
+
+<h2 id="about">1. AI TOP 100</h2>
+<h3>대회 소개</h3>
+<p><a href="https://aitop100.org/" target="_blank" rel="noopener">AI TOP 100</a></p>
+<ul>
+<li>카카오에서 주최한 AI 해커톤으로 예선전은 2026년 10월 31일 10시부터 15시까지 진행했습니다.</li>
+</ul>
+<h3>문제</h3>
+<p>가상의 마을에서 쇼핑몰 고객을 응대하는 AI 에이전트를 카카오톡 채널 챗봇으로 만들어서 제출하는 것이었습니다.</p>
+<h3>문제 해결</h3>
+<ul>
+<li>에이전트가 쓸 지식은 처음에 주어지지 않고, 마을 관계자(각자 카카오톡 채널)를 직접 인터뷰해서 지식을 발굴해야 합니다.</li>
+<li>처음에는 대표 인물 한명만 공개되고, 대화 속 단서로 다음 관계자를 찾아가는 구조이며, 관계자별로 질문은 100개로 제한되어 있고, 선행 지식을 알아야 열리는 지식도 있었습니다.</li>
+<li>제출 후 운영진이 고객 역할로 시나리오 메시지를 보내 채점하는 방식이었습니다.</li>
+<li>채점 기준은 지식 발굴률, 응답 속도, 말풍선 수, 말풍선당 글자 수, 응답 정확도(운영 정책·액션 API 처리 포함)</li>
+</ul>
+
+<h2 id="arch">2. 에이전트 시스템 아키텍처</h2>
+<p>카카오톡 메시지 하나가 답장이 되기까지의 흐름입니다. <b>▶ 흐름 재생</b>을 누르거나 각 블록을 눌러 보세요.</p>
+<div class="card">
+<div class="row" style="margin-bottom:10px">
+<button class="primary" id="play">▶ 흐름 재생</button>
+<button id="prev">◀ 이전</button><button id="next">다음 ▶</button>
+<span class="note" id="stepno"></span>
+</div>
+<svg id="archsvg" viewBox="0 0 760 420" role="img" aria-label="시스템 아키텍처">
+<path class="e" id="e1" d="M120,80 H220"/>
+<path class="e" id="e2" d="M380,80 H470"/>
+<path class="e" id="e3" d="M300,110 V190"/>
+<path class="e" id="e4" d="M380,220 H470"/>
+<path class="e" id="e5" d="M560,250 V300"/>
+<path class="e" id="e6" d="M500,250 V275 H340 V300"/>
+<path class="e" id="e7" d="M220,330 H85 V250"/>
+<path class="e" id="e8" d="M65,190 V110"/>
+<g class="n" data-k="kakao"><rect x="10" y="50" width="110" height="60" rx="10"/><text x="65" y="76" text-anchor="middle" font-weight="600">카카오톡</text><text class="s" x="65" y="96" text-anchor="middle">고객 메시지</text></g>
+<g class="n" data-k="webhook"><rect x="220" y="50" width="160" height="60" rx="10"/><text x="300" y="76" text-anchor="middle" font-weight="600">/webhook</text><text class="s" x="300" y="96" text-anchor="middle">FastAPI · Render</text></g>
+<g class="n" data-k="ack"><rect x="470" y="50" width="180" height="60" rx="10"/><text x="560" y="76" text-anchor="middle" font-weight="600">즉시 200 응답</text><text class="s" x="560" y="96" text-anchor="middle">1초 제한 대응</text></g>
+<g class="n" data-k="agent"><rect x="220" y="190" width="160" height="60" rx="10"/><text x="300" y="216" text-anchor="middle" font-weight="600">Agent</text><text class="s" x="300" y="236" text-anchor="middle">가드 · 세션 · 프롬프트</text></g>
+<g class="n" data-k="llm"><rect x="470" y="190" width="180" height="60" rx="10"/><text x="560" y="216" text-anchor="middle" font-weight="600">LLM 도구 루프</text><text class="s" x="560" y="236" text-anchor="middle">Solar Pro 4 · 최대 8라운드</text></g>
+<g class="n" data-k="action"><rect x="470" y="300" width="180" height="60" rx="10"/><text x="560" y="326" text-anchor="middle" font-weight="600">운영진 액션 API</text><text class="s" x="560" y="346" text-anchor="middle">조회·환불·쿠폰·이관 40개</text></g>
+<g class="n" data-k="guard"><rect x="220" y="300" width="160" height="60" rx="10"/><text x="300" y="326" text-anchor="middle" font-weight="600">출력 검사</text><text class="s" x="300" y="346" text-anchor="middle">유출 · 개인정보 · 500자</text></g>
+<g class="n" data-k="callback"><rect x="10" y="190" width="150" height="60" rx="10"/><text x="85" y="216" text-anchor="middle" font-weight="600">콜백 답장</text><text class="s" x="85" y="236" text-anchor="middle">카카오 Callback API</text></g>
+</svg>
+<div class="panel" id="panel"><b>블록을 눌러 보세요</b>각 단계가 어떤 역할을 하는지 설명이 나옵니다.</div>
+</div>
+
+<h3>설계 포인트</h3>
+<ul>
+<li><b>웹훅 1초 제한</b>: 웹훅에는 즉시 200을 주고, 백그라운드에서 LLM을 돌린 뒤 콜백 API로 답장을 하도록 했으며 메시지 ID로 중복을 처리했습니다.</li>
+<li><b>액션 API 40개 자동 연결</b>: OpenAPI 스펙을 읽어 엔드포인트를 전부 LLM 도구로 등록했고 경로 값은 형식 검증 후 호출하도록 했습니다.</li>
+<li><b>시나리오 분리</b>: 심사 메시지의 케이스 ID가 바뀌면 이전 대화 기록을 초기화하도록 했습니다.</li>
+<li><b>보안</b>: 입력 태그 격리, 인젝션 패턴 감지, 도구 결과 속 지시문 무시, 프롬프트 유출 검사, 조회된 주소·수령인 값이 답변에 나오면 코드로 차단하도록 했습니다.</li>
+<li><b>안정성</b>: 응답 마감 시간, 액션 API 재시도, Render free 플랜 슬립 방지 셀프 핑(Render의 무료 플랜을 사용했기 때문에 채점하는 동안 서버가 멈추지 않도록 계속해서 셀프 핑을 주는 방식으로 했습니다.)</li>
+</ul>
+
+<h3 id="render">Render로 서버를 처음 다뤄 보며</h3>
+<p>이번 대회에서 Render로 서버를 처음 배포해 봤습니다. Mac이 꺼져도 서버는 Render에서 계속 돈다는 점이 가장 편했고, 실제로 써보면서 배운 부분이 있었습니다.</p>
+<div class="card">
+<b>배포 순서</b>
+<div class="loop"><span>테스트 통과</span><span class="arr">→</span><span>git push</span><span class="arr">→</span><span>Manual Deploy</span><span class="arr">→</span><span>헬스 체크</span><span class="arr">→</span><span>카톡으로 확인</span></div>
+<details><summary>무료 플랜은 잠든다</summary>15분간 요청이 없으면 서버가 잠듭니다. 잠든 서버는 스스로 깨어나지 못하기 때문에 서버가 5분마다 자기 헬스 체크 주소를 호출하는 셀프 핑을 넣었습니다.</details>
+<details><summary>push와 배포는 별개</summary>자동 배포를 꺼둔 상태로 해서 <code>git push</code>만으로는 반영되지 않습니다. 대시보드에서 Manual Deploy를 눌러서 배포했습니다. 제출물이 실수로 바뀌는 일은 막아 주지만 고칠 때마다 직접 Deploy를 해야해서 번거로운 부분이 있었습니다.</details>
+<details><summary>환경 변수는 저장만으로 끝나지 않는다</summary>키는 코드에 넣지 않고 환경 변수에 뒀는데 Save만 하면 반영되지 않고 Save, rebuild, and deploy까지 해야 했습니다.</details>
+<details><summary>주소를 정확히 확인하기</summary>서비스 이름이 같은 경우에는 서비스 이름 뒤에 임의 문자가 붙은 주소를 받습니다. 처음에는 이걸 모르고 그 문자가 없는 다른 사람의 서비스에 접속하려고 하다보니 오류의 원인을 파악하지 못했습니다. 웹훅 URL을 넣을 때는 Render 대시보드에 나온 주소를 그대로 복사해야 했습니다.</details>
+<details><summary>재시작하면 메모리가 사라진다</summary>대화 기록을 서버 메모리에 두어서 재배포하면 진행 중인 대화가 초기화됐습니다.</details>
+<details><summary>로그가 디버깅의 전부</summary>카카오톡 답장이 안 올 때 이유는 대부분 Render 로그에 있었습니다. 심사 중 429를 발견한 곳도 로그였습니다.</details>
+</div>
+
+<h2 id="day">3. 대회 진행</h2>
+<div class="timeline">
+<div class="tl"><span class="t">10:00</span><b>문제 분석</b>채점 기준·API 스펙 정리</div>
+<div class="tl"><span class="t">오전~오후</span><b>관계자 인터뷰</b>답변·문서를 지식 파일로</div>
+<div class="tl"><span class="t">병행</span><b>도구·프롬프트</b>액션 API 40개 연결</div>
+<div class="tl"><span class="t">반복</span><b>배포·테스트</b>카톡으로 TC 전송 → 로그</div>
+<div class="tl"><span class="t">14:50</span><b>제출</b>디브리프 작성</div>
+</div>
+<p class="note" style="margin-top:10px">제출 시점에 모든 관계자 10명과 대화했고, 운영 지식은 약 6만 6천 자/60개 섹션으로 정리했습니다.</p>
+
+<h3 id="chat">관계자와 실제로 나눈 채팅(카카오톡)</h3>
+<p>관계자 인터뷰는 전부 카카오톡 채널에서 했습니다. 실제 대화에서 기억에 남는 채팅 몇 가지를 가져왔습니다. (긴 답변은 …로 줄였고, 문서 주소와 연락처는 뺐습니다.)</p>
+<div class="card">
+<div class="chips" id="scenes"></div>
+<div class="phone">
+<div class="phone-top"><span id="scene-title"></span><button id="replay">↻ 다시 재생</button></div>
+<div class="chatlog" id="chatlog" aria-live="polite"></div>
+</div>
+<p class="note" id="scene-note" style="margin:10px 0 0"></p>
+</div>
+
+<h3 id="status">발굴률은 어떻게 올랐나</h3>
+<p>관계자 채널에서 <code>./status</code>를 입력하면 질문 수와 지식 발굴률을 확인할 수 있었습니다. 제출 전 기록을 그래프로 그려봤습니다.</p>
+<div class="card">
+<div class="chips" id="people"></div>
+<div class="chartwrap" id="chartwrap">
+<svg id="chart" viewBox="0 0 760 320" role="img" aria-label="관계자별 지식 발굴률 추이"></svg>
+<div id="ctip"></div>
+</div>
+<p style="margin:10px 0 0" id="chart-note"></p>
+<details><summary>표로 보기</summary><table class="t" id="ctable"></table></details>
+</div>
+<ul>
+<li>첫 대화 상대인 이민준에게는 12:13까지 32번 물어보며 55%까지 올렸지만, 이후 46개의 질문을 했음에도 10포인트 밖에 오르지 않았습니다.</li>
+<li>마지막에 만난 홍보걸은 14개의 질문으로 87%까지 올랐습니다. 관계자 소개를 좀 더 일찍 받았다면 지식을 더 발굴했을 수 있었을 것 같아서 아쉬웠습니다.</li>
+<li>제출 직전 평균 지식 발굴률은 약 58%이었으며, 총 질문 수는 283개였습니다.</li>
+</ul>
+
+<h2 id="good">4. 잘 된 부분</h2>
+<ul>
+<li><b>사전 준비</b>: 웹훅·콜백·보안·셀프 핑을 대회 전에 만들어 둬서 당일 인프라 문제는 거의 없었습니다.</li>
+<li><b>교차 검증</b>: 같은 사건을 관계자마다 다르게 기억했고 문서와 진술이 엇갈리는 지점이 많았습니다. 기록(로그·정본 문서)을 진술보다 우선하는 기준을 세워 정리했습니다.</li>
+<li><b>회귀를 빨리 잡음</b>: 마감 직전 규칙을 보강하자 다른 고객의 수령인 정보가 답변에 나오는 회귀가 생겼고 바로 이전 버전으로 되돌린 뒤 코드로 차단하는 장치를 추가했습니다.</li>
+</ul>
+
+<h2 id="bad">5. 문제가 된 것</h2>
+<h3>심사 중 LLM 429</h3>
+<p>심사 중 서버 로그에 <code>429 Too Many Requests</code>가 반복되는 것을 목격했습니다. 분당 토큰 한도인지 요청 한도인지까지는 확정하지 못했지만 구조에서 찾은 유력한 원인을 파악해봤습니다.</p>
+<ul>
+<li><b>지식 6만 6천 자를 매 LLM 호출의 시스템 프롬프트에 통째로 넣었습니다.</b></li>
+<li>메시지 1개에 도구 호출 라운드가 최대 8번이고, 라운드마다 6만 6천 자를 다시 보냅니다.</li>
+<li>429를 받으면 재시도하거나 다른 공급자로 넘기는 경로가 없어 그대로 오류 답장이 나갔습니다.</li>
+</ul>
+<h3>답변 끊김</h3>
+<p>문장 중간에 끊기는 답이 있었고 추정되는 두 가지의 원인이 있습니다. 출력 토큰 상한(800)을 추론 토큰이 함께 쓰며 답변 공간이 모자랐을 가능성과 500자 초과를 막으려고 문자열을 무조건 잘랐던 처리입니다.</p>
+<h3>느린 검증 주기</h3>
+<div class="grid2">
+<div class="box bad"><h4>실제 구현 방식 · 수 분</h4>
+<div class="loop"><span>코드 수정</span><span class="arr">→</span><span>push</span><span class="arr">→</span><span>수동 배포</span><span class="arr">→</span><span>카톡 전송</span><span class="arr">→</span><span>로그 확인</span></div>
+공개 TC 15건 중 제대로 확인한 건 3건</div>
+<div class="box good"><h4>개선 방식 · 예상 수십 초</h4>
+<div class="loop"><span>코드 수정</span><span class="arr">→</span><span>로컬 TC 스크립트</span><span class="arr">→</span><span>리포트</span></div>
+답변·도구 호출·길이·개인정보 노출을 한 번에 검사</div>
+</div>
+<h3>인터뷰 진행 방식</h3>
+<ul>
+<li>미리 뽑은 긴 질문 리스트는 "선행 지식이 있어야 열리는" 구조와 맞지 않아서 질문 개수만 잡아먹을 뿐 지식 발굴률에는 의미가 없었습니다.</li>
+<li>관계자 답변을 하나씩 복사해 AI에게 붙이는 불필요한 시간이 너무 많이 들었습니다.</li>
+<li>중간에 복붙하는 방식이 아니라 대화를 캡처하는 방식으로 바꿔봤는데 나중에 생각해보니 그냥 대화 내보내기를 하거나 클로드가 채팅 화면을 보고 정보를 가져오도록 했어야 했었습니다.</li>
+</ul>
+
+<h2 id="calc">6. 입력량 비교: 호출마다 얼마나 보냈을까</h2>
+<p>메시지 하나에 LLM이 몇 라운드를 도는지, 분당 메시지가 몇 개 들어오는지에 따라 LLM에 보내는 글자 수가 얼마나 달라지는지 직접 확인해보면 제가 구현한 지식 활용 방식이 잘못되었다는 것을 알 수 있습니다.</p>
+<div class="card">
+<label>메시지당 LLM 라운드: <b id="rv">3</b></label>
+<input type="range" id="rounds" min="1" max="8" value="3">
+<label>분당 들어오는 메시지: <b id="mv">5</b></label>
+<input type="range" id="mpm" min="1" max="20" value="5">
+<div class="bars">
+<div class="bar"><span>통째로 주입</span><div class="track"><div class="fill" id="fb" style="background:var(--bad)"></div></div><span class="num" id="nb"></span></div>
+<div class="bar"><span>검색 방식</span><div class="track"><div class="fill" id="fg" style="background:var(--good)"></div></div><span class="num" id="ng"></span></div>
+</div>
+<p style="margin:14px 0 0">분당 입력량 차이: <span class="big" id="ratio"></span></p>
+<p class="note">지식을 통으로 주입 = 라운드마다 약 70,000자(지식+규칙)<br>검색 방식 = 상주 규칙 약 7,000자 + 검색 결과 최대 3,000자<br>(글자 수 기준의 대략치이며 실제 토큰 수는 측정하지 않았습니다.)</p>
+</div>
+
+<h2 id="knowledge">7. 지식은 이렇게 나눴어야 했습니다</h2>
+<p>6만 6천 자를 한 덩어리로 넣는 대신 매 호출에 들어가는 <b>상주 코어</b>와 필요할 때만 꺼내는 <b>검색 도메인</b>으로 나누는 구조가 적절했을 것 같습니다.</p>
+<div class="card">
+<div class="row">
+<button id="kb" aria-pressed="true">제출 버전</button>
+<button id="kg" aria-pressed="false">검색 방식</button>
+</div>
+<div class="stack" id="stack"></div>
+<div class="legend" id="klegend"></div>
+<div class="panel" id="kpanel"></div>
+</div>
+<ul>
+<li>섹션마다 <b>시행일·공개 여부·연결된 섹션</b>을 메타데이터로 붙여서 문의 접수일 기준 규정 버전을 고를 수 있게 합니다.</li>
+<li>같이 꺼내야 판단이 맞는 섹션(예: 배송 온도 기록과 수산물 중량 기준)은 <b>교차 참조</b>로 연결해 검색 누락을 줄입니다.</li>
+</ul>
+
+<h3 id="compare">구조 비교: 통째로 주입 vs search_knowledge</h3>
+<p>지식을 검색 도구로 분리하면 시스템 전체 구조가 어떻게 다를지 봤습니다.</p>
+<div class="card">
+<div class="row" style="margin-bottom:12px">
+<button id="cmpA" aria-pressed="true">제출 버전</button>
+<button id="cmpB" aria-pressed="false">개선 버전</button>
+</div>
+<div class="wide-scroll cmp" id="cmpViewA">
+<svg viewBox="0 0 1000 330" role="img" aria-label="제출 버전 구조">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker>
+<marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--bad)"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--good)"/></marker>
+</defs>
+<rect class="ar" x="10" y="40" width="130" height="60" rx="8"/><text x="75" y="66" text-anchor="middle" font-weight="600">카카오톡</text><text x="75" y="86" text-anchor="middle" class="ms" font-size="12">심사자 메시지</text>
+<path class="al" d="M140,70 H190"/>
+<rect class="ar" x="190" y="40" width="160" height="60" rx="8"/><text x="270" y="66" text-anchor="middle" font-weight="600">/webhook</text><text x="270" y="86" text-anchor="middle" class="ms" font-size="12">즉시 200 → 백그라운드</text>
+<path class="al" d="M350,70 H400"/>
+<rect class="ar" x="400" y="20" width="230" height="100" rx="8"/><text x="515" y="46" text-anchor="middle" font-weight="600">시스템 프롬프트</text>
+<text x="515" y="68" text-anchor="middle" font-size="13">행동 규칙</text>
+<text x="515" y="88" text-anchor="middle" font-size="13" class="tbad">+ 운영 지식 약 6만 7천 자 전부</text>
+<text x="515" y="108" text-anchor="middle" font-size="13">+ 마지막 형식 규칙</text>
+<path class="al bad" d="M630,70 H690"/>
+<rect class="ar bad" x="690" y="20" width="290" height="100" rx="8"/><text x="835" y="46" text-anchor="middle" font-weight="600">LLM 도구 루프</text>
+<text x="835" y="68" text-anchor="middle" font-size="13">최대 8라운드 + 재지시 1회</text>
+<text x="835" y="88" text-anchor="middle" font-size="13" class="tbad">라운드마다 지식 전체를 다시 전송</text>
+<text x="835" y="108" text-anchor="middle" font-size="13" class="tbad">→ 심사 중 429 반복</text>
+<path class="al" d="M835,120 V180"/>
+<rect class="ar" x="690" y="180" width="290" height="56" rx="8"/><text x="835" y="204" text-anchor="middle" font-weight="600">액션 API 40개</text><text x="835" y="224" text-anchor="middle" class="ms" font-size="12">조회 결과가 다음 라운드 입력으로</text>
+<rect class="ar bad" x="190" y="190" width="440" height="100" rx="8"/>
+<text x="410" y="216" text-anchor="middle" class="tbad">429가 나면</text>
+<text x="410" y="240" text-anchor="middle" font-size="13">재시도 없이 예외 처리</text>
+<text x="410" y="262" text-anchor="middle" font-size="13">고객에게 "일시적인 오류" 답장</text>
+<text x="410" y="282" text-anchor="middle" font-size="12" class="ms">다른 공급자로 넘기는 경로 없음</text>
+</svg>
+</div>
+<div class="wide-scroll cmp" id="cmpViewB" hidden>
+<svg viewBox="0 0 1000 470" role="img" aria-label="개선 버전 구조">
+<rect class="ar" x="10" y="40" width="130" height="60" rx="8"/><text x="75" y="66" text-anchor="middle" font-weight="600">카카오톡</text><text x="75" y="86" text-anchor="middle" class="ms" font-size="12">심사자 메시지</text>
+<path class="al" d="M140,70 H190"/>
+<rect class="ar" x="190" y="40" width="160" height="60" rx="8"/><text x="270" y="66" text-anchor="middle" font-weight="600">/webhook</text><text x="270" y="86" text-anchor="middle" class="ms" font-size="12">변경 없음</text>
+<path class="al" d="M350,70 H400"/>
+<rect class="ar good" x="400" y="20" width="230" height="100" rx="8"/><text x="515" y="46" text-anchor="middle" font-weight="600">슬림 시스템 프롬프트</text>
+<text x="515" y="68" text-anchor="middle" font-size="13">행동 규칙 + 지식 목차</text>
+<text x="515" y="88" text-anchor="middle" font-size="13" class="tgood">상주 코어 약 7,000자</text>
+<text x="515" y="108" text-anchor="middle" font-size="12" class="ms">상위 1~2섹션 선주입은 선택</text>
+<path class="al good" d="M630,70 H690"/>
+<rect class="ar acc" x="690" y="20" width="290" height="100" rx="8"/><text x="835" y="46" text-anchor="middle" font-weight="600">LLM 라우터</text>
+<text x="835" y="68" text-anchor="middle" font-size="13">1순위 공급자 → 429면 대기 후 재시도</text>
+<text x="835" y="88" text-anchor="middle" font-size="13">그래도 실패 → 예비 공급자 호출</text>
+<text x="835" y="108" text-anchor="middle" font-size="12" class="ms">도구 루프 최대 4~5라운드</text>
+<path class="al" d="M760,120 V190"/>
+<path class="al" d="M910,120 V190"/>
+<rect class="ar good" x="610" y="190" width="220" height="110" rx="8"/><text x="720" y="216" text-anchor="middle" font-weight="600">search_knowledge(query)</text>
+<text x="720" y="238" text-anchor="middle" font-size="13">섹션 색인에서 키워드 검색</text>
+<text x="720" y="258" text-anchor="middle" font-size="13">상위 3섹션, 최대 3,000자</text>
+<text x="720" y="280" text-anchor="middle" font-size="12" class="ms">시행일·버전 정보 포함</text>
+<rect class="ar" x="850" y="190" width="140" height="110" rx="8"/><text x="920" y="226" text-anchor="middle" font-weight="600">액션 API</text><text x="920" y="248" text-anchor="middle" font-size="13">40개 도구</text><text x="920" y="270" text-anchor="middle" font-size="12" class="ms">변경 없음</text>
+<path class="al" d="M720,300 V350"/>
+<rect class="ar" x="440" y="350" width="540" height="100" rx="8"/>
+<text x="710" y="376" text-anchor="middle" font-weight="600">지식 섹션 색인 (서버 시작 시 1회 로드)</text>
+<text x="710" y="400" text-anchor="middle" font-size="13">제목 단위로 분할한 약 60개 섹션</text>
+<text x="710" y="422" text-anchor="middle" font-size="13">섹션별 제목·키워드·시행일·본문</text>
+<text x="710" y="440" text-anchor="middle" font-size="12" class="ms">이 규모면 외부 벡터 DB 불필요</text>
+<rect class="ar" x="10" y="190" width="400" height="160" rx="8"/>
+<text x="210" y="216" text-anchor="middle" font-weight="600">예: "옥돔이 녹아서 왔어요"</text>
+<text x="30" y="244" font-size="13">① LLM → 주문 조회 API</text>
+<text x="30" y="266" font-size="13">② LLM → search_knowledge("냉동 해동 콜드체인")</text>
+<text x="44" y="286" font-size="12" class="ms">→ 온도 기록·중량 기준·이관 절차 3섹션</text>
+<text x="30" y="308" font-size="13">③ 고객 동의 → 이관 API 접수</text>
+<text x="30" y="330" font-size="13">④ 최종 답변</text>
+</svg>
+</div>
+</div>
+<div class="card wide-table" style="overflow-x:auto">
+<table class="t">
+<tr><th>항목</th><th>제출 버전</th><th>개선 버전</th></tr>
+<tr><td>시스템 프롬프트</td><td class="b">약 70,000자</td><td class="g">약 7,000자</td></tr>
+<tr><td>라운드당 추가 지식</td><td>없음 (이미 전부 포함)</td><td>검색한 라운드만 최대 3,000자</td></tr>
+<tr><td>메시지 1개, 3라운드 입력</td><td class="b">약 210,000자</td><td class="g">약 27,000자</td></tr>
+<tr><td>토큰 한도 위험</td><td class="b">높음</td><td class="g">낮음 (입력 약 1/8)</td></tr>
+<tr><td>요청 횟수 한도 위험</td><td>라운드 수만큼</td><td>거의 같음 → 재시도·예비 공급자로 대비</td></tr>
+<tr><td>정확도 위험</td><td>지식 누락 없음</td><td>검색 누락 가능 → 목차 상주·교차 참조로 보완</td></tr>
+</table>
+<p class="note" style="margin:10px 0 0">글자 수와 라운드 수로 대략 계산한 것으로 개선 버전은 실제 구현해서 측정한 수치가 아닙니다.</p>
+</div>
+
+<h3 id="graph">지식을 카테고리별 지식 그래프로 그려봤습니다</h3>
+<p>60개 섹션을 <b>상주 코어 1개 + 검색 도메인 8개</b>로 묶었습니다. 원 크기는 섹션 글자 수, 주황 점선은 한 문의에서 함께 꺼내야 하는 교차 참조입니다.</p>
+<div class="card">
+<div class="wide-scroll"><svg id="kgraph" viewBox="0 0 1300 1060" role="img" aria-label="운영 지식 그래프"></svg></div>
+<div class="legend" id="glegend" style="margin-top:8px"></div>
+<details style="margin-top:12px"><summary>도메인별 분할 표</summary><div style="overflow-x:auto"><table class="t" id="gtable"></table></div></details>
+</div>
+<div id="ktip"></div>
+<h3>검색은 이렇게 돌아갑니다</h3>
+<div class="flow">
+<div class="box"><h4>① 상주 코어</h4>응대 원칙, 위기 대응, 이관 절차 같은 행동 규칙과 지식 목차만 매 호출에 넣습니다.</div>
+<div class="box"><h4>② 도메인 찾기</h4>LLM이 <code>search_knowledge</code>를 호출해 필요한 도메인을 찾습니다.</div>
+<div class="box"><h4>③ 섹션 + 이웃</h4>맞는 섹션 2개와 교차 참조로 연결된 섹션 1개를 최대 3,000자로 돌려줍니다.</div>
+<div class="box"><h4>④ 날짜 필터</h4>시행일 정보로 문의 접수일에 맞는 규정 버전만 남깁니다.</div>
+</div>
+<details style="margin-top:14px"><summary>섹션 메타데이터 예시</summary>
+<pre>{
+  "id": "refund.partial_formula",
+  "domain": "환불·보상",
+  "title": "부분환불 산식",
+  "effective": "시행일",
+  "visibility": "internal",   // public이면 고객에게 인용 가능
+  "keywords": ["부분환불", "하자 비율"],
+  "links": ["refund.delegation", "refund.rules"]
+}</pre>
+</details>
+<details><summary>다음에 구현한다면:</summary>
+<ol>
+<li>지식 파일을 제목 단위로 나눠 불러오고 <code>search_knowledge</code>를 도구로 등록합니다.</li>
+<li>시스템 프롬프트에서 지식 본문을 빼고 섹션 목차만 넣습니다.</li>
+<li>429는 <code>Retry-After</code>만큼 기다려 재시도하고 그럼에도 실패하면 예비 공급자를 호출합니다.</li>
+<li>대표 질문 20개로 정답 섹션이 상위 3개에 드는지 테스트합니다.</li>
+<li>공개 TC를 연달아 보내 429와 지연 속도를 측정합니다.</li>
+</ol>
+</details>
+
+<h2 id="retry">8. 다시 한다면</h2>
+<details open><summary>(지식 구조) 나눠서 꺼내 쓰기</summary>
+상주 코어(응대 원칙·이관·안전 규칙, 약 7천 자)만 매 호출에 넣고 나머지는 도메인별로 나눠 <code>search_knowledge</code> 도구로 필요할 때만 꺼내기
+</details>
+<details><summary>(안정성) 실패는 코드로 대비하기</summary>
+<ul>
+<li>429는 대기 후 재시도하고 실패했을 때를 대비하기 위해 다른 LLM을 예비 공급자로 배치</li>
+<li>답변 길이는 코드로 보장: 문장 단위로 자르기, 잘린 응답이면 다시 요약 요청</li>
+<li>제출 전 배포 서버로 연속 부하 테스트해서 한도 확인</li>
+</ul>
+</details>
+<details><summary>(검증) 로컬 TC 실행 스크립트부터 만들기</summary>
+대회 시작과 동시에 카카오톡이나 배포 없이 에이전트 함수를 직접 불러 답변, 도구 호출, 길이, 개인정보 노출을 검사하는 스크립트를 만들기. 수정 주기를 몇 분에서 수십 초로 줄일 수 있는 방법.
+</details>
+<details><summary>(인터뷰) 리스트 대신 단서 따라가기</summary>
+<ul>
+<li>관계자마다 공통 첫 질문 3~4개(맡은 업무, 가진 문서, 최근 사건, 더 잘 아는 사람)로 시작하고 <b>답변에서 단서를 뽑아 다음 질문 1~2개를 상황을 따라가며</b> 고르기</li>
+<li>카카오톡 PC의 대화 내보내기로 관계자별 대화를 파일로 넘겨 한꺼번에 정리</li>
+<li><b>진술 불일치 표</b>를 따로 관리하기. 엇갈리는 지점 자체가 숨은 지식이고, 에이전트의 우선순위 규칙이 되는 방식.</li>
+<li>(규정이 금지한 것은 대량 자동 요청과 공격) 그냥 전부 손으로 입력했지만 대회 중 받은 시스템 메시지를 보면 AI 활용을 더 적극적으로 고민할 여지가 있었으며, AI 활용 허용 범위를 다음엔 시작 전에 확인하고 AI가 내 손보다 더 많이 움직이도록 하기</li>
+</ul>
+</details>
+<details open><summary>(카카오톡 화면 읽기) AI는 읽고, 사람은 보내기</summary>
+<p>이번에는 답변을 하나씩 복사해 AI에게 붙이는 방식으로 했지만, 다시 한다면 AI가 카카오톡 PC 앱 화면을 스크린샷으로 읽는 computer use 방식을 시도해보기. 메시지는 사람이 보내고, AI는 읽고 정리하는 역할만 맡는 방식.</p>
+<div class="loop"><span>사람이 질문 전송</span><span class="arr">→</span><span>"새 답변 왔어, 봐 줘"</span><span class="arr">→</span><span>AI가 화면을 읽음</span><span class="arr">→</span><span>관계자별 파일에 누적</span><span class="arr">→</span><span>단서·불일치 비교</span><span class="arr">→</span><span>누구에게 무엇을 물을지 제안</span></div>
+<ul>
+<li><b>동시에 보는 건 X</b>: 10개 채팅방을 하나씩 돌아가며 읽습니다. 대신 파일에 쌓인 뒤에는 10명의 내용을 한꺼번에 비교할 수 있습니다.</li>
+<li><b>실시간 감시도 X</b>: 요청을 받거나 정해 둔 주기에만 확인합니다. 새 답변이 왔을 때 그 방만 읽게 하는 편이 효율적입니다.</li>
+<li><b>원문 대조는 필요</b>: 이미지로 읽어서 번호·날짜·금액을 잘못 읽을 수 있으니 지식의 기준은 내보낸 대화 파일로 다시 맞춥니다.</li>
+<li><b>문서 링크는 따로 열기</b>: 메시지 속 링크는 주소를 확인한 뒤 브라우저에서 엽니다.</li>
+<li><b>규정 확인이 우선</b>: 대회라면 화면 읽기와 자동 입력이 허용되는지 시작 전에 확인해야 합니다.</li>
+</ul>
+<p class="note">아직 카카오톡에서 직접 시험해 본 방식은 아니고, 다음에 해 보고 싶은 아이디어입니다.</p>
+</details>
+<details><summary>(AI와 일하는 방식) 역할을 나누기</summary>
+<p>AI 세션 하나에 인터뷰 보조·지식 정리·개발·배포를 다 맡겼더니 문서에 적어 둔 배포 중심 일정에 끌려가 지식 발굴 단계를 충분히 돕지 못했습니다.</p>
+<ul>
+<li>아직 지식 발굴률이 50%도 올라가지 않았는데 AI가 계속해서 질문은 멈추고 배포를 하라고 질릴 정도로 방향 전환을 시도했습니다.</li>
+</ul>
+<div class="grid2">
+<div class="box"><h4>총괄</h4>단계 판단, 우선순위, 사람과 대화</div>
+<div class="box"><h4>인터뷰 분석</h4>단서 추출, 다음 질문, 불일치 표</div>
+<div class="box"><h4>지식 정리</h4>대화 내보내기 → 도메인별 섹션</div>
+<div class="box"><h4>테스트</h4>로컬 TC 실행, 리포트</div>
+</div>
+<p style="margin-top:10px">각 역할끼리는 파일로 소통하고 단계마다 "넘어가는 조건"을 미리 정해두는 방식으로 AI를 활용해보고 싶습니다.</p>
+</details>
+
+<h2 id="closing">9. 마치며</h2>
+<p>5시간 동안 지식 발굴과 에이전트 구현을 동시에 해야 하는 대회였습니다.</p>
+<p>처음에는 에이전트를 만들기 위한 관계자들과의 대화라고 생각하며 시작했는데, 막상 대회를 진행하다보니 점점 취조를 하는 느낌이 났습니다. 중간에 내가 AX 전문가인지 형사인지 하는 생각이 들기도 했습니다. 관계자가 처음에는 한명으로 시작해서 한명씩 한명씩 관계자의 연락처를 받거나, 새로운 파일 혹은 새로운 지식을 얻으면서 진행하니 방탈출 느낌도 났습니다.</p>
+<p>대회 진행도 원활했고 클로드 프로 플랜으로도 지식을 파헤치는 작업과 에이전트를 만드는 작업까지 약간의 크레딧만 추가해서 만들 수 있다는 부분이 좋았습니다. 무엇보다 AI로 문제를 풀어가는 작업은 안해봤는데 이번 예선에서 5시간이 어떻게 흘러가는지 모르게 몰입할 정도로 재밌었습니다. (매달 AI로 이런 대회가 열렸으면 할 정도로 너무 재밌었습니다.)</p>
+<p>이번 대회에서 가장 많이 느꼈던 건 제가 아직도 AI를 제대로 쓸 줄 모른다는 점입니다. 우선 심사 로그를 보며 에이전트가 지식을 어떻게 활용하도록 해야 하는지도 배울 수 있었습니다. 지금까지는 지식을 통으로 넣어서 주는 방식만 생각했는데, 이 지식을 분류해서 필요한 순간에 적절하게 꺼내쓸 수 있는 구조가 문서 크기가 컸을 때 중요하다는 것을 배웠습니다.</p>
+<p>그리고 다른 참가자들이 AI를 어떻게 활용하면서 대회를 진행했는지를 보고 배운 부분도 많았습니다. 클로드를 쓰면서 skill은 거의 안쓰고 있었다는 것도 느꼈고, AI를 잘 쓰기 위한 방법으로 직접 많이 써보는 것도 중요하겠지만 여러 유용한 방법들을 써보는 것도 공부가 되겠다는 것을 확실하게 느꼈습니다.</p>
+<div class="dark-end"><p>결론</p><strong>매우 재밌었고 진심으로 아쉬웠고 많이 배웠습니다.</strong></div>
+</article>
+<footer>[2026] AI TOP 100 예선 참가 후기</footer>
+
+<script>
+// 아키텍처: 흐름 단계 = [강조할 노드, 강조할 엣지, 설명]
+const INFO = {
+  kakao:["카카오톡","고객이 채널 챗봇에 메시지를 보내면 카카오가 서버 웹훅으로 이벤트를 전달합니다."],
+  webhook:["/webhook (FastAPI on Render)","메시지 ID로 중복을 거르고, 케이스 ID를 읽어 새 시나리오면 대화 기록을 초기화합니다."],
+  ack:["즉시 200 응답","카카오 웹훅은 1초 안에 응답해야 합니다. 그래서 먼저 200을 돌려주고 실제 답장은 백그라운드에서 만듭니다."],
+  agent:["Agent","입력 길이·인젝션 패턴 검사 → 사용자 입력 태그 격리 → 시스템 프롬프트(규칙+지식) + 최근 대화 10턴으로 LLM 호출을 준비합니다."],
+  llm:["LLM 도구 루프","Solar Pro 4가 필요한 도구를 고르고 결과를 보고 다음 행동을 정합니다. 최대 8라운드, '처리하겠다'고 말만 하면 한 번 더 실행을 지시합니다."],
+  action:["운영진 액션 API","회원·주문 조회, 환불·쿠폰·배송지 변경, 담당자 이관 등 40개 엔드포인트. OpenAPI 스펙에서 자동으로 도구로 등록했습니다."],
+  guard:["출력 검사","시스템 프롬프트 문장 유출, 조회된 주소·수령인 값 노출을 막고, 말풍선 1개·500자 이내로 맞춥니다."],
+  callback:["콜백 답장","1회용 콜백 토큰으로 카카오 Callback API에 simpleText 답장을 보냅니다. 토큰 유효 시간은 5분입니다."],
+};
+const STEPS = [
+  [["kakao","webhook"],["e1"]],
+  [["webhook","ack"],["e2"]],
+  [["webhook","agent"],["e3"]],
+  [["agent","llm"],["e4"]],
+  [["llm","action"],["e5"]],
+  [["llm","guard"],["e6"]],
+  [["guard","kakao","callback"],["e7","e8"]],
+];
+const STEP_TXT = [
+  "① 고객 메시지가 웹훅으로 들어옵니다.",
+  "② 1초 제한 때문에 먼저 200을 응답합니다.",
+  "③ 백그라운드에서 Agent가 입력을 검사하고 프롬프트를 준비합니다.",
+  "④ LLM이 도구 호출 루프를 시작합니다.",
+  "⑤ 필요한 액션 API를 호출하고 결과를 다시 LLM에 넘깁니다.",
+  "⑥ 최종 답변을 출력 검사에 통과시킵니다.",
+  "⑦ 콜백 API로 카카오톡에 답장합니다.",
+];
+const archEl=document.getElementById("archsvg"), panel=document.getElementById("panel"), stepno=document.getElementById("stepno");
+let cur=-1, timer=null;
+function clear(){archEl.querySelectorAll(".on").forEach(x=>x.classList.remove("on"));}
+function show(i){
+  cur=(i+STEPS.length)%STEPS.length; clear();
+  const [ns,es]=STEPS[cur];
+  ns.forEach(k=>document.querySelector(`#archsvg [data-k="${k}"]`).classList.add("on"));
+  es.forEach(id=>document.getElementById(id).classList.add("on"));
+  const k=ns[ns.length-1];
+  panel.innerHTML=`<b>${STEP_TXT[cur]}</b>${INFO[k][1]}`;
+  stepno.textContent=`${cur+1} / ${STEPS.length}`;
+}
+function stop(){clearInterval(timer);timer=null;document.getElementById("play").textContent="▶ 흐름 재생";}
+document.getElementById("play").onclick=()=>{
+  if(timer){stop();return;}
+  document.getElementById("play").textContent="❚❚ 멈춤";
+  show(cur+1); timer=setInterval(()=>{ if(cur===STEPS.length-1){stop();return;} show(cur+1); },2200);
+};
+document.getElementById("next").onclick=()=>{stop();show(cur+1);};
+document.getElementById("prev").onclick=()=>{stop();show(cur<0?STEPS.length-1:cur-1);};
+archEl.querySelectorAll(".n").forEach(g=>g.addEventListener("click",()=>{
+  stop(); clear(); g.classList.add("on"); stepno.textContent="";
+  const [t,d]=INFO[g.dataset.k]; panel.innerHTML=`<b>${t}</b>${d}`;
+}));
+
+// 429 계산기
+const FULL=70000, CORE=7000, SEARCH=3000;
+const r=document.getElementById("rounds"), m=document.getElementById("mpm");
+function calc(){
+  const R=+r.value, M=+m.value;
+  document.getElementById("rv").textContent=R; document.getElementById("mv").textContent=M;
+  const bad=FULL*R*M, good=(CORE*R+SEARCH*Math.min(R,2))*M;
+  const max=FULL*8*20;
+  document.getElementById("fb").style.width=Math.max(1,bad/max*100)+"%";
+  document.getElementById("fg").style.width=Math.max(1,good/max*100)+"%";
+  document.getElementById("nb").textContent=(bad/10000).toFixed(1)+"만 자/분";
+  document.getElementById("ng").textContent=(good/10000).toFixed(1)+"만 자/분";
+  document.getElementById("ratio").textContent="약 "+(bad/good).toFixed(1)+"배";
+}
+r.oninput=m.oninput=calc; calc();
+
+// 지식 구조 비교 (도메인별 글자 수, 실제 분할 결과 기준)
+const DOM=[
+  ["상주 코어",6750,"#2563eb"],["환불·보상",8255,"#0891b2"],["주문·결제·증빙",5406,"#7c3aed"],["상품·가격·프로모션",11633,"#db2777"],
+  ["배송·물류",5470,"#16a34a"],["산지·공급",8290,"#ca8a04"],["개인정보·보안",5897,"#dc2626"],["회원·조직",7601,"#475569"],["행사·홍보",7243,"#0d9488"],
+];
+const stack=document.getElementById("stack"), kp=document.getElementById("kpanel");
+stack.innerHTML=DOM.map(([n,c,col],i)=>`<div data-i="${i}" style="flex:${c};background:${col}" title="${n} ${c.toLocaleString()}자">${c>7000?n:""}</div>`).join("");
+document.getElementById("klegend").innerHTML=DOM.map(([n,c,col])=>`<span><i style="background:${col}"></i>${n} ${(c/1000).toFixed(1)}k</span>`).join("");
+function mode(search){
+  document.getElementById("kb").setAttribute("aria-pressed",!search);
+  document.getElementById("kg").setAttribute("aria-pressed",search);
+  stack.querySelectorAll("div").forEach(d=>{
+    const i=+d.dataset.i;
+    // 검색 방식 예시: 배송 문의 → 코어 + 배송·물류 + 교차 참조 1개(환불·보상)
+    const keep=!search||i===0||i===4||i===1;
+    d.style.opacity=keep?1:.12;
+  });
+  kp.innerHTML=search
+    ? "<b>검색 방식</b>예) 배송 문의 → 상주 코어 + '배송·물류'에서 검색한 섹션 + 교차 참조된 '환불·보상' 섹션 1개만 들어갑니다. 나머지는 이번 호출에 들어가지 않습니다."
+    : "<b>제출 버전: 호출당 지식만 약 6만 7천 자</b>무엇을 묻든 9개 도메인 전부가 매 라운드 시스템 프롬프트에 들어갔습니다.";
+}
+document.getElementById("kb").onclick=()=>mode(false);
+document.getElementById("kg").onclick=()=>mode(true);
+mode(false);
+
+// 실제 인터뷰 장면: d=날짜 구분, s=시스템, me=내 메시지, 그 외=[이름, 메시지]
+const SCENES=[
+ {t:"출고 마감 핑퐁",note:"오전부터 제출 직전까지 물었지만 두 사람은 서로에게 넘겼고, 원하던 정보는 알아내지 못했습니다.",m:[
+  ["d","10:16 · 이민준 채널"],["me","아침 출고는 몇 시쯤 마감돼? 주문은 언제까지 들어와야 당일 출고되고, 주말이나 휴일엔 어떻게 처리되는거야?"],
+  ["이민준","아침 출고 마감 시간이랑 주문을 몇 시까지 받아야 당일 출고되는지는 내가 지금 정확하게 말해 줄 수 없어. 그 부분은 추측해서 말하고 싶지 않아."],
+  ["d","10:58 · 구방만 채널"],["me","출고 마감 시간이 어떻게 되나요? …"],
+  ["구방만","출고 마감 시간은 제가 확실히 아는 내용이 아니라서 지금 말씀드릴 수가 없습니다. 출고 일정은 민준 운영자와 같이 맞추는 부분이니 그쪽에 직접 확인하시는 게 빠를 겁니다."],
+  ["d","14:02 · 이민준 채널"],["me","당일 출고 주문 마감 시각, 주말 주문 처리는 누구한테 물어보면 되는거야? 너도 모른다고 했어가지고"],
+  ["이민준","응, 그래서 그 부분은 내가 정확히 말하지 않았던 거야. 당일 출고 마감 시각이랑 주말 주문 처리는 구방만 기사님께 직접 물어보는 게 맞아. …"],
+  ["d","14:03 · 구방만 채널"],["me","이민준이 이렇게 답했어요. 당일 출고 마감 시각이랑 주말 주문 처리는 구방만 기사님께 직접 물어보는 게 맞아. …"],
+  ["구방만","민준 운영자가 그렇게 말씀하셨다면 맞습니다. 다만 제가 주문을 받는 시각이나 출고 회차, 주말 주문을 어떻게 처리하는지는 아는 내용이 아닙니다. … 그 부분은 민준 운영자께 직접 확인하시는 게 정확합니다."]]},
+ {t:"태도 변화",note:"초반에는 친구에게 반말, 어른에게 존댓말로 실존인물과 대화하는 느낌으로 했습니다. 시간이 지나면서 AI가 짜 준 질문을 그대로 붙이기 시작했습니다. 조합장님께 반말을 하고, 친구에게 존댓말을 하고, 제주 사투리까지 그냥 막 갖다 전달했습니다. 카카오톡 채팅방에 채팅 내보내기 기능을 생각 못하고 일일이 손수 복붙하다보니 초반과 후반에 태도 차이가 생겼습니다. (실제 사람은 아니니 태도나 말투는 상관없었겠지만, 이 대회 상황에 몰입하다보니 조금 신경쓰게 되었습니다.)",m:[
+  ["d","10:13 · 이민준 채널 (친구)"],["me","민준아 잘 지내니. 교동마을에서 상품 판매부터 고객 응대(CS)까지 혼자 전담하느라 힘들지? …"],
+  ["이민준","야, 나 잘 지내지. 마을까지 와 줘서 고맙다."],
+  ["d","12:52 · 홍이장 채널 (제주 어르신)"],["me","옥돔 냉동 재고는 지금 넉넉하수까?"],
+  ["홍이장","옥돔 냉동 재고가 넉넉한지는 제가 말로 짐작해서 답할 수 없수다. …"],
+  ["d","13:01 · 고길동 채널 (조합장님)"],["me","수박에서 이물이 나왔다는 신고 … 원인을 찾았어?"],
+  ["고길동","… 짐작으로 답하지는 않겠습니다."],
+  ["d","14:20 · 이민준 채널 (친구)"],["me","선물 배송에서 가격표 제거를 신청한 주문은 출하장에서 어떻게 구분해서 포장하나요?"],
+  ["이민준","선물 배송에서 가격표 제거를 신청한 주문을 출하장에서 어떻게 구분해서 포장하는지는 내가 아는 내용이 없어. 추측해서 말하지는 않을게. …"],
+  ["d","14:23 · 이민준 채널 (친구)"],["me","홍보 표현 보정 접수는 어떤 절차로 하나요? 접수하면 누가 확인하나요?"],
+  ["이민준","보정 접수 절차하고 접수된 건을 누가 확인하는지는 내가 정확히 아는 게 없어. 추측해서 말하면 안 될 것 같아. …"]]},
+ {t:"연락처도 승인이 필요해",note:"다음 관계자를 만나려면 다른 관계자에게 그냥 물어봐서 알아내는 경우도 있었지만, 다른 관계자의 동의를 먼저 확인하고 나서 연락처를 받을 수 있는 관계자도 존재했습니다. 여기서 지식에 순서가 있다는 걸 알 수 있었습니다.",m:[
+  ["d","12:04 · 이민준 채널"],["me","단골 고객 조억만 고객님이랑 이야기해 볼 수 있을까? 연락 방법 알려 줘."],
+  ["이민준","조억만 고객님 연락처는 내가 갖고 있어. … 조합장님께 먼저 여쭤보고 다시 얘기하자."],
+  ["d","12:22 · 고길동 채널"],["me","단골 고객 조억만 님과 이야기해 볼 수 있을까요"],
+  ["고길동","… 프로젝트 참가자에게 본인 연락처를 안내하는 데도 동의하셨습니다. 연락처는 민준이가 갖고 있으니 이민준에게 받으시면 됩니다."],
+  ["d","12:23 · 이민준 채널"],["me","고길동님한테 승인 받았어. 조억만 님 연락처 알려줘."],
+  ["이민준","아, 조합장님 승인 받았으면 그렇게 알고 연락하면 돼. 앞에서 먼저 여쭤보라고 했던 건 이 확인을 하라는 뜻이었어."]]},
+ {t:"기억과 기록",note:"본인은 말한 적이 없다고 했지만 방송 기록을 대조하니 해석이 달라질 수 있는 발언이 남아 있었습니다. 그래서 진술보다 기록을 기준으로 삼았습니다.",m:[
+  ["d","13:32 · 홍보걸 채널"],["me","라이브 중에 \"무료배송\"이라는 말을 하신 적이 있나요? 있다면 어떤 맥락이었나요?"],
+  ["홍보걸","라이브에서 \"무료배송\"이라고 말한 적은 없습니다. 제가 진행한 라이브나 올린 게시물에서 무료배송을 말한 적이 없고, 배송비 이야기는 아예 꺼내지 않았습니다. …"],
+  ["me","\"20% 할인\"이라는 말을 라이브나 게시물에서 하신 적이 있나요?"],
+  ["홍보걸","라이브에서도 올린 게시물에서도 20% 할인을 말한 적이 없습니다. 제가 한 말은 캡처와 스크립트에 그대로 남아 있으니, 그 기록으로 확인하시면 됩니다."]]},
+ {t:"설마 손으로?",note:"인터뷰 도중 시스템 메시지가 불쑥 왔습니다. 화면을 보고, 생각하고, 입력하는 과정을 반복하는 그림이라 AI 활용 힌트로 읽혔습니다. 그럼에도 저는 끝까지 손으로 입력해서 진행했습니다..",m:[
+  ["d","11:07 · 이민준 채널"],["s","[SYSTEM]\n잘하고 있어?\n에이... 설마 아직도 직접 손으로 타이핑하면서 인터뷰 중인 건 아니겠지?\n🤖👀📸 → 🤔 → 🖱️⌨️ → 🔁 → 🎉"],
+  ["me","./status"],["s","[SYSTEM] 질문수 20/100, 지식발굴율 33%"]]},
+ {t:"그거 너잖아",note:"협력자를 찾으려다 제 역할을 다시 확인받았습니다. 관계자들이 세계관 속 인물처럼 답해서 인터뷰가 꽤 재미있었습니다.",m:[
+  ["d","12:57 · 이민준 채널"],["me","시스템 개발이나 조사 지원으로 조합 일을 돕는 외부 협력자가 있어?"],
+  ["이민준","야, 그 질문은 너 아니야? 내가 부탁해서 마을까지 와 준 외부 AX 전문가 친구가 너잖아. 고객 응대 에이전트 만드는 거 같이 봐 주는 사람."]]},
+];
+const log=document.getElementById("chatlog"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let run=0, active=0;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function bottom(){log.scrollTop=log.scrollHeight;}
+function themRow(name){
+  const row=document.createElement("div"); row.className="m";
+  const av=document.createElement("div"); av.className="avatar"; av.textContent=name[0];
+  const box=document.createElement("div");
+  const who=document.createElement("div"); who.className="who"; who.textContent=name;
+  box.append(who); row.append(av,box); return [row,box];
+}
+function bubble(text){const b=document.createElement("div"); b.className="bubble"; b.textContent=text; return b;}
+async function add(msg,id,animate){
+  const [k,text]=msg;
+  if(k==="d"||k==="s"){const d=document.createElement("div"); d.className=k==="d"?"day":"sys"; d.textContent=text; log.append(d);}
+  else if(k==="me"){const r=document.createElement("div"); r.className="m me"; r.append(bubble(text)); log.append(r);}
+  else{
+    const [row,box]=themRow(k); log.append(row);
+    if(animate){
+      const t=document.createElement("div"); t.className="bubble typing"; t.innerHTML="<i></i><i></i><i></i>"; box.append(t); bottom();
+      await wait(Math.min(1500,500+text.length*8)); if(id!==run)return; t.remove();
+    }
+    box.append(bubble(text));
+  }
+  bottom();
+}
+async function play(i){
+  const id=++run; active=i; const s=SCENES[i];
+  log.textContent=""; document.getElementById("scene-title").textContent=s.t; document.getElementById("scene-note").textContent="";
+  document.querySelectorAll("#scenes button").forEach((b,n)=>b.setAttribute("aria-pressed",n===i));
+  for(const msg of s.m){
+    await add(msg,id,!reduce); if(id!==run)return;
+    if(!reduce) await wait(msg[0]==="d"?250:msg[0]==="me"?450:750);
+    if(id!==run)return;
+  }
+  document.getElementById("scene-note").textContent=s.note;
+}
+SCENES.forEach((s,i)=>{const b=document.createElement("button"); b.textContent=s.t; b.onclick=()=>play(i); document.getElementById("scenes").append(b);});
+document.getElementById("replay").onclick=()=>play(active);
+document.getElementById("scene-title").textContent=SCENES[0].t;
+new IntersectionObserver((es,ob)=>{if(es.some(e=>e.isIntersecting)){ob.disconnect();if(!run)play(0);}},{threshold:.35}).observe(log);
+
+// ./status 기록 (제출 전). [시각, 질문 수, 발굴률]
+const ST={
+ "이민준":[["10:08",0,0],["10:20",4,8],["10:28",7,14],["10:37",13,27],["10:50",18,33],["11:07",20,33],["11:29",22,35],["11:38",24,39],["12:13",32,55],["12:24",40,59],["12:36",45,61],["12:43",48,61],["12:53",55,63],["12:56",58,63],["12:59",62,63],["13:49",65,63],["14:04",67,63],["14:25",69,63],["14:44",78,65]],
+ "고길동":[["10:58",4,17],["12:13",10,26],["12:24",14,29],["12:36",16,34],["13:12",23,43],["13:49",24,43],["13:55",25,51],["14:10",29,54],["14:17",33,57],["14:43",35,60]],
+ "구방만":[["11:22",7,17],["12:13",9,21],["12:36",13,33],["13:13",21,42],["13:49",23,46],["14:17",28,50],["14:25",34,63]],
+ "김청년":[["11:22",3,20],["12:13",5,35],["12:36",6,35],["12:45",7,40],["12:56",13,60],["14:17",13,60]],
+ "홍보라":[["10:39",2,3],["11:09",5,11],["11:22",6,11],["12:13",10,23],["12:22",13,34],["12:36",15,40],["12:45",17,43],["13:00",24,49],["13:49",25,49],["14:25",30,51]],
+ "홍이장":[["12:13",7,42],["12:36",7,42],["12:43",8,42],["13:13",15,46],["13:18",16,46],["13:48",18,50],["14:16",22,58]],
+ "박민아":[["12:36",3,24],["12:52",6,33],["13:49",12,43],["14:13",13,43],["14:25",14,43]],
+ "박수복":[["12:13",6,29],["12:36",11,44],["13:56",20,44],["14:04",22,44],["14:25",23,47]],
+ "조억만":[["12:45",3,27],["13:49",14,45],["14:22",20,45]],
+ "홍보걸":[["13:43",14,87]],
+};
+const chart=document.getElementById("chart"), NSV="http://www.w3.org/2000/svg", ctip=document.getElementById("ctip");
+const mins=t=>+t.slice(0,2)*60+ +t.slice(3), X=t=>48+(mins(t)-600)/300*690, Y=v=>286-v*2.6;
+const mk=(n,a,txt)=>{const e=document.createElementNS(NSV,n);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;};
+[0,25,50,75,100].forEach(v=>{chart.append(mk("line",{class:"gridl",x1:48,x2:738,y1:Y(v),y2:Y(v)}),mk("text",{class:"axis",x:40,y:Y(v)+4,"text-anchor":"end"},v+"%"));});
+[10,11,12,13,14,15].forEach(h=>chart.append(mk("text",{class:"axis",x:X(`${h}:00`),y:308,"text-anchor":"middle"},h+"시")));
+const lines={}; const topG=mk("g",{});
+Object.entries(ST).forEach(([n,d])=>{
+  const p=mk("path",{class:"sl",d:d.map((r,i)=>`${i?"L":"M"}${X(r[0])},${Y(r[2])}`).join(" ")});
+  p.addEventListener("click",()=>pick(n)); lines[n]=p; chart.append(p);
+});
+chart.append(topG);
+function tipAt(n,r){
+  const w=document.getElementById("chartwrap").getBoundingClientRect(), s=w.width/760;
+  ctip.textContent=`${n} · ${r[0]} · 질문 ${r[1]}회 · ${r[2]}%`; ctip.style.display="block";
+  ctip.style.left=Math.min(X(r[0])*s+8,w.width-210)+"px"; ctip.style.top=Math.max(0,Y(r[2])*s-36)+"px";
+}
+function pick(n){
+  Object.entries(lines).forEach(([k,p])=>{p.classList.toggle("on",k===n); if(k===n)chart.insertBefore(p,topG);});
+  document.querySelectorAll("#people button").forEach(b=>b.setAttribute("aria-pressed",b.textContent===n));
+  topG.textContent=""; const d=ST[n], last=d[d.length-1];
+  d.forEach(r=>{
+    topG.append(mk("circle",{class:"dot",cx:X(r[0]),cy:Y(r[2]),r:4}));
+    const h=mk("circle",{class:"hit",cx:X(r[0]),cy:Y(r[2]),r:12});
+    h.addEventListener("mouseenter",()=>tipAt(n,r)); h.addEventListener("click",()=>tipAt(n,r)); h.addEventListener("mouseleave",()=>ctip.style.display="none");
+    topG.append(h);
+  });
+  document.getElementById("chart-note").textContent=`${n}: 질문 ${last[1]}회, 발굴률 ${last[2]}%`;
+}
+Object.keys(ST).forEach(n=>{const b=document.createElement("button"); b.textContent=n; b.onclick=()=>pick(n); document.getElementById("people").append(b);});
+document.getElementById("ctable").innerHTML="<tr><th>관계자</th><th class='r'>질문 수</th><th class='r'>발굴률</th></tr>"+Object.entries(ST).map(([n,d])=>{const l=d[d.length-1];return `<tr><td>${n}</td><td class="r">${l[1]}</td><td class="r">${l[2]}%</td></tr>`}).join("");
+pick("이민준");
+
+// 구조 비교 토글
+(()=>{
+  const a=document.getElementById("cmpA"), b=document.getElementById("cmpB"), va=document.getElementById("cmpViewA"), vb=document.getElementById("cmpViewB");
+  const set=second=>{a.setAttribute("aria-pressed",!second); b.setAttribute("aria-pressed",second); va.hidden=second; vb.hidden=!second;};
+  a.onclick=()=>set(false); b.onclick=()=>set(true);
+})();
+
+// 지식 그래프: 도메인 8개 + 상주 코어, 글자 수는 knowledge.md를 제목 단위로 실제로 센 값
+(()=>{
+  const G=[
+   {k:"코어(상주)",c:"--acc",core:true,s:[["응대 원칙",218],["질문형·요청형 구분",876],["모달리티 세칙",1214],["위기신호 대응",1295],["에스컬레이션 3레인",2376],["조합장 추가 원칙",239],["응답시간 SLA",532]]},
+   {k:"환불·보상",c:"--c1",s:[["판매·환불 규정",2364],["환불 권한",579],["권한 위임표",2874],["부분환불 산식",1629],["과거 상담 약속",375],["고객 경험담",434]]},
+   {k:"주문·결제·증빙",c:"--c2",s:[["결제·주문 대사",1609],["세금계산서·현금영수증",1186],["정기배송 약관",988],["운영 일정",643],["영업일 달력→도구",980]]},
+   {k:"상품·가격·프로모션",c:"--c3",s:[["SKU 카탈로그",3206],["가격 정책 시트",1997],["상품 상세페이지",905],["라벨·표시사항",1232],["선물세트",657],["쿠폰 코드",172],["프로모션 원장",1929],["프로모션 관련",533],["동봉 안내문",1002]]},
+   {k:"배송·물류·콜드체인",c:"--c4",s:[["택배 위탁 계약",1364],["결항·집하 기록",250],["출하장 인계 대장",699],["콜드체인 로그",1290],["수산물 중량 허용치",1024],["산지 픽업",843]]},
+   {k:"산지·공급·시즌",c:"--c5",s:[["수산물 위탁 계약",1423],["조업·입고 기록",643],["농산 시즌 캘린더",1039],["산지 캘린더·기상",1565],["방제일지",720],["로트 원장",2302],["예약 출고 지연",598]]},
+   {k:"개인정보·보안",c:"--c6",s:[["개인정보 처리방침",2907],["제3자 정보 보호",2169],["피싱·사칭 주의",821]]},
+   {k:"회원·조합·조직",c:"--c7",s:[["조합 운영 규정",2861],["조합원 이용약관",712],["조합원 가입",291],["조직 관계도",1013],["사업자정보",570],["도매 거래",1435],["농가 이야기",719]]},
+   {k:"체험·행사·홍보",c:"--c8",s:[["체험 운영 기준",971],["체험 팸플릿",935],["과거 행사 목록",490],["과거 체험 명단",292],["축제 매대 전단",809],["마을 축제 매대",400],["홍보 협약 계약",1040],["인플루언서 발언 기록",1136],["게시물 상태",419],["인플루언서 진술",751]]},
+  ];
+  const LINKS=[
+   ["콜드체인 로그","수산물 중량 허용치","온도 이탈과 감량 기준을 함께 판단"],
+   ["콜드체인 로그","출하장 인계 대장","인계 기록과 온도 로그 대조"],
+   ["콜드체인 로그","에스컬레이션 3레인","배상 레인으로 이관"],
+   ["가격 정책 시트","판매·환불 규정","가격 인하 보상 판단"],
+   ["가격 정책 시트","조합 운영 규정","개정 시행일 확인"],
+   ["프로모션 원장","인플루언서 발언 기록","할인 코드 발행 여부 대조"],
+   ["인플루언서 발언 기록","홍보 협약 계약","발언 책임 범위"],
+   ["프로모션 원장","쿠폰 코드","보상 쿠폰 발급"],
+   ["동봉 안내문","판매·환불 규정","하자 접수 기한 개정"],
+   ["권한 위임표","부분환불 산식","재량 한도 안에서 계산"],
+   ["권한 위임표","에스컬레이션 3레인","승인 단계"],
+   ["제3자 정보 보호","결제·주문 대사","타 계정 주문 비공개"],
+   ["로트 원장","방제일지","출고 검사와 안전 기준"],
+   ["로트 원장","라벨·표시사항","로트 표기 대조"],
+   ["예약 출고 지연","농산 시즌 캘린더","확정 출고일 안내 금지"],
+   ["결항·집하 기록","택배 위탁 계약","구제 지연 사유로 쓰지 않음"],
+   ["피싱·사칭 주의","위기신호 대응","사칭 피해 신호"],
+   ["상품 상세페이지","라벨·표시사항","표시 불일치 판단"],
+   ["조직 관계도","에스컬레이션 3레인","이관 대상"],
+  ];
+  const svg=document.getElementById("kgraph"), tip=document.getElementById("ktip"), NS="http://www.w3.org/2000/svg";
+  const CX=650, CY=530, R=390, nodes={}, adj={};
+  const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const gE=el("g",{}), gX=el("g",{}), gN=el("g",{}), gL=el("g",{}); svg.append(gE,gX,gN,gL);
+  const doms=G.filter(d=>!d.core), edges=[];
+  G.forEach(d=>{
+    let hx=CX, hy=CY, ang=0;
+    if(!d.core){const i=doms.indexOf(d); ang=-Math.PI/2+i*2*Math.PI/doms.length; hx=CX+R*Math.cos(ang); hy=CY+R*Math.sin(ang)*.92;}
+    const total=d.s.reduce((a,b)=>a+b[1],0), hub="H:"+d.k;
+    nodes[hub]={id:hub,x:hx,y:hy,r:d.core?30:22,c:d.c,label:d.k,size:total,hub:true,dom:d.k};
+    const n=d.s.length, spread=d.core?2*Math.PI:Math.min(Math.PI*1.05,.36*n), lr=d.core?118:112;
+    d.s.forEach(([name,sz],j)=>{
+      const a=d.core?-Math.PI/2+j*2*Math.PI/n:ang-spread/2+(n===1?spread/2:j*spread/(n-1));
+      const rr=lr+(d.core?0:(j%2)*22);
+      nodes[name]={id:name,x:hx+rr*Math.cos(a),y:hy+rr*Math.sin(a),r:4+Math.sqrt(sz)/4.2,c:d.c,label:name,size:sz,dom:d.k,a};
+      edges.push([hub,name]);
+    });
+    if(!d.core) edges.push(["H:코어(상주)",hub]);
+  });
+  const link=(a,b,e)=>{(adj[a]=adj[a]||[]).push([b,e]);(adj[b]=adj[b]||[]).push([a,e]);};
+  edges.forEach(([a,b])=>{const A=nodes[a],B=nodes[b],l=el("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,class:"ge"});gE.append(l);link(a,b,l);});
+  LINKS.forEach(([a,b,why])=>{const A=nodes[a],B=nodes[b];
+    const mx=(A.x+B.x)/2+(CX-(A.x+B.x)/2)*.25, my=(A.y+B.y)/2+(CY-(A.y+B.y)/2)*.25;
+    const p=el("path",{d:`M${A.x},${A.y} Q${mx},${my} ${B.x},${B.y}`,class:"gx"});p.dataset.why=why;gX.append(p);link(a,b,p);});
+  const clear=()=>{svg.classList.remove("dim");svg.querySelectorAll(".on").forEach(x=>x.classList.remove("on"));tip.style.display="none";};
+  const place=e=>{tip.style.left=Math.min(e.clientX+14,innerWidth-296)+"px";tip.style.top=Math.min(e.clientY+14,innerHeight-120)+"px";};
+  const show=(n,e)=>{
+    clear(); svg.classList.add("dim"); n.el.classList.add("on"); n.t.classList.add("on");
+    const xs=[];
+    (adj[n.id]||[]).forEach(([m,l])=>{l.classList.add("on");nodes[m].el.classList.add("on");nodes[m].t.classList.add("on");if(l.dataset.why)xs.push(`${nodes[m].label}: ${l.dataset.why}`);});
+    tip.innerHTML=`<b>${n.label}</b><br>${n.hub?"도메인 합계 ":""}${n.size.toLocaleString()}자 · ${n.dom}`+(xs.length?"<br>"+xs.join("<br>"):"");
+    tip.style.display="block"; place(e);
+  };
+  Object.values(nodes).forEach(n=>{
+    const c=el("circle",{cx:n.x,cy:n.y,r:n.r,class:"gn",fill:`var(${n.c})`,"fill-opacity":n.hub?1:.8,stroke:"var(--card)","stroke-width":1.5});
+    gN.append(c); n.el=c;
+    const t=el("text",{class:"gl","font-size":n.hub?14:12,"font-weight":n.hub?700:400});
+    if(n.hub){t.setAttribute("x",n.x);t.setAttribute("y",n.y+n.r+15);t.setAttribute("text-anchor","middle");}
+    else{const right=Math.cos(n.a)>=0;t.setAttribute("x",n.x+(right?1:-1)*(n.r+4));t.setAttribute("y",n.y+4);t.setAttribute("text-anchor",right?"start":"end");}
+    t.textContent=n.label; gL.append(t); n.t=t;
+    c.addEventListener("mouseenter",e=>show(n,e));
+    c.addEventListener("mousemove",place);
+    c.addEventListener("mouseleave",clear);
+    c.addEventListener("click",e=>{e.stopPropagation();show(n,e);});
+  });
+  svg.addEventListener("click",clear);
+  document.getElementById("glegend").innerHTML=G.map(d=>`<span><i class="sw" style="background:var(${d.c});border-radius:50%"></i>${d.k}</span>`).join("")+`<span><i style="width:18px;height:0;border-radius:0;border-top:2px dashed var(--x);vertical-align:3px"></i>교차 참조</span>`;
+  const sum=d=>d.s.reduce((a,b)=>a+b[1],0), all=G.reduce((a,d)=>a+sum(d),0);
+  document.getElementById("gtable").innerHTML="<tr><th>도메인</th><th>주입 방식</th><th class='r'>섹션</th><th class='r'>글자 수</th></tr>"+
+    G.map(d=>`<tr><td>${d.k}</td><td>${d.core?"매 호출 상주":"검색할 때만"}</td><td class="r">${d.s.length}</td><td class="r">${sum(d).toLocaleString()}</td></tr>`).join("")+
+    `<tr><td><b>합계</b></td><td></td><td class="r">${G.reduce((a,d)=>a+d.s.length,0)}</td><td class="r"><b>${all.toLocaleString()}</b></td></tr>`;
+})();
+</script>
+</body>
+</html>
